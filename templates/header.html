@@ -1,0 +1,22 @@
+<header>
+  <h1>Harfang's Perch</h1>
+  <nav>
+    <ul>
+      <li>
+        <a href="/">$homeLinkText$</a>
+      </li>
+      <li>
+        <a href="/about">$aboutLinkText$</a>
+      </li>
+      <li>
+        <ul>
+          $for(langs)$
+          <li>
+            <a href="$langUrl$">$langName$</a>
+          </li>
+          $endfor
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
