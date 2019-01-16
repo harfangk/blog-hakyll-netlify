@@ -8,7 +8,28 @@
     <link rel="stylesheet" href="/css/default.css" />
   </head>
   <body>
-    $partial("templates/header.html")$
+    <header>
+      <h1>Harfang's Perch</h1>
+      <nav>
+        <ul>
+          <li>
+            <a href="$homeLinkUrl$">$homeLinkText$</a>
+          </li>
+          <li>
+            <a href="$aboutLinkUrl$">$aboutLinkText$</a>
+          </li>
+          <li>
+            <ul>
+              $for(langs)$
+              <li>
+                <a href="$langUrl$">$langName$</a>
+              </li>
+              $endfor$
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
 
     <main role="main">
       $body$

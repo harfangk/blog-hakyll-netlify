@@ -3,9 +3,8 @@
 import           Data.Monoid (mappend)
 import           Hakyll
 
-import System.FilePath (takeBaseName, takeDirectory, (</>), (<.>), dropFileName, takeFileName)
+import System.FilePath (takeBaseName, takeDirectory, (</>), (<.>), takeFileName)
 import System.Directory (listDirectory)
-import qualified Data.Map as M
 
 
 --------------------------------------------------------------------------------
@@ -46,10 +45,6 @@ main = hakyll $ do
     indexRules "de"
     indexRules "en"
     indexRules "ko"
-
-
-
-
 --------------------------------------------------------------------------------
 
 indexRules :: String -> Rules ()
@@ -73,13 +68,15 @@ headerCtx :: String -> Context String
 headerCtx lang =
     listField "langs" indexI18nCtx (return . buildI18nItems $ supportedLangs) `mappend`
     constField "homeLinkText" (homeLinkText lang) `mappend`
+    constField "homeLinkUrl" (homeLinkUrl lang) `mappend`
     constField "aboutLinkText" (aboutLinkText lang) `mappend`
+    constField "aboutLinkUrl" (aboutLinkUrl lang) `mappend`
     constField "title" "Harfang's Perch" `mappend`
     defaultContext
 
 supportedLangs :: [ FilePath ]
 supportedLangs =
-    [ "en", "ko", "de" ]
+    [ "en", "ko" ]
 
 indexLinkUrl :: String -> String
 indexLinkUrl lang =
@@ -101,6 +98,10 @@ postsHeader lang =
     "de" -> "Posts"
     _ -> "Posts"
 
+aboutLinkUrl :: String -> String
+aboutLinkUrl lang =
+  "/" ++ lang ++ "/about.html"
+
 aboutLinkText :: String -> String
 aboutLinkText lang =
   case lang of
@@ -108,6 +109,10 @@ aboutLinkText lang =
     "ko" -> "소개"
     "de" -> "About"
     _ -> "About"
+
+homeLinkUrl :: String -> String
+homeLinkUrl lang =
+  "/" ++ lang ++ "/index.html"
 
 homeLinkText :: String -> String
 homeLinkText lang =
