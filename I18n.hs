@@ -1,25 +1,63 @@
-module I18n (titleMap, descriptionMap) where
+module I18n where
 
-import qualified Data.Map as M (Map)
-import System.FilePath (</>, takeBaseName, takeDirectory)
+import System.FilePath (takeBaseName, takeDirectory, (</>), (<.>))
 
-import Hakyll
+supportedLangs :: [ FilePath ]
+supportedLangs =
+    [ "en", "ko" ]
 
-type Language = String
+indexLinkUrl :: String -> FilePath
+indexLinkUrl lang =
+  "/" ++ lang ++ "/index.html"
 
-type LanguageMap = M.Map Language String
+indexLinkText :: String -> String
+indexLinkText lang =
+  case lang of
+    "en" -> "Posts"
+    "ko" -> "글 목록"
+    "de" -> "Posts"
+    _ -> "Posts"
 
-descriptionMap :: LanguageMap
-descriptionMap =
-  M.fromList
-  [ ("en", "On software in general, with focus on Elm, Elixir")
-  , ("ko", "소프트웨어 전반에 대한 개인 블로그. Elm, Elixir")
-  ]
+postLinkUrl :: FilePath -> FilePath
+postLinkUrl path =
+  "" </> takeBaseName path </> takeDirectory path <.> "html"
 
-url: "https://harfangk.github.io"
-github_username:  harfangk
-twitter_username: harfangk
+postLinkText :: String -> String
+postLinkText lang =
+  case lang of
+    "en" -> "English"
+    "ko" -> "한국어"
+    "de" -> "Deutsch"
+    _ -> "Unknown Language"
 
-getRoute :: Identifier -> Routes
-getRoute i =
-  let path = toFilePath i
+postsHeader :: String -> String
+postsHeader lang =
+  case lang of
+    "en" -> "Posts"
+    "ko" -> "글 목록"
+    "de" -> "Posts"
+    _ -> "Posts"
+
+aboutLinkUrl :: String -> String
+aboutLinkUrl lang =
+  "/" ++ lang ++ "/about.html"
+
+aboutLinkText :: String -> String
+aboutLinkText lang =
+  case lang of
+    "en" -> "About"
+    "ko" -> "소개"
+    "de" -> "About"
+    _ -> "About"
+
+homeLinkUrl :: String -> String
+homeLinkUrl lang =
+  "/" ++ lang ++ "/index.html"
+
+homeLinkText :: String -> String
+homeLinkText lang =
+  case lang of
+    "en" -> "Home"
+    "ko" -> "홈"
+    "de" -> "Home"
+    _ -> "Home"
