@@ -16,7 +16,7 @@ I didn't know how to do that in Elixir, so I decided to figure it out.
 
 The plain text was encoded in hexadecimal and has to be converted to binary first. I searched and found that `Base` module had `decode16/2` function. 
 
-{% highlight elixir %}
+```elixir
 {:ok, ct} = Base.decode16("7427a99a4e7a45683a")
 ** (MatchError) no match of right hand side value: :error
 
@@ -27,21 +27,21 @@ The plain text was encoded in hexadecimal and has to be converted to binary firs
 
 pt = "menagerie"
 "menagerie"
-{% endhighlight %}
+```
 
 I tried straight-up XOR.
 
-{% highlight elixir %}
+```elixir
 use Bitwise
 Bitwise
 ct ^^^ pt
 ** (ArithmeticError) bad argument in arithmetic expression
     :erlang.bxor(ct, pt)
-{% endhighlight %}
+```
 
 Well, that didn't work. I now had to figure out how to XOR each of corresponding bytes in the pair of bitstrings. `Enum` is the obvious first choice for iteration, but bitstring is not an `Enumerable` so that was out of option. I decided to use [generators](http://elixir-lang.org/getting-started/comprehensions.html) instead.
 
-{% highlight elixir %}
+```elixir
 for << a::8 <- ct, b::8 <- pt >>, do: a ^^^ b
 ** (CompileError) iex:60: undefined function <-/2
     (elixir) src/elixir_bitstring.erl:33: :elixir_bitstring.expand_bitstr/4
@@ -49,11 +49,11 @@ for << a::8 <- ct, b::8 <- pt >>, do: a ^^^ b
     (elixir) src/elixir_for.erl:44: :elixir_for.expand/2
     (stdlib) lists.erl:1354: :lists.mapfoldl/3
     (elixir) src/elixir_for.erl:31: :elixir_for.expand/3
-{% endhighlight %}
+```
 
 No multiple generators for bitstrings, I guess. Even if that worked, it wouldn't have done what I wanted. Next idea was to turn bitstrings into lists and operate on them. Like this.
 
-{% highlight elixir %}
+```elixir
 defmodule XorLists do
   def xor_lists(list1, list2) do
     _xor_lists(list1, list2, [])
@@ -72,13 +72,13 @@ list_pt = String.to_charlist(pt)
 'menagerie'
 XorLists.xor_lists(list_ct, list_pt)
 <<25, 66, 199, 251, 41, 31, 55, 1, 95>>
-{% endhighlight %}
+```
 
 It works well and I got the one-time pad key. But at this point, someone in IRC told me to look into `:crypto.exor`.
 
-{% highlight elixir %}
+```elixir
 :crypto.exor(ct, pt)
 <<25, 66, 199, 251, 41, 31, 55, 1, 95>>
-{% endhighlight %}
+```
 
 Well, it seems that I didn't have to go through all of that. At least I got it right and learned much more about binaries in Elixir, though.

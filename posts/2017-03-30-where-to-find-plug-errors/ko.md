@@ -16,11 +16,11 @@ HTTP POST 요청을 통해서 JSON을 받는 앱을 만드는 과정에서 재�
 
 즉, 다음과 같이 잘못된 형식의 JSON을 담은 요청을 보낸다고 합시다.
 
-{% highlight json %}
+```json
 {
   "
 }
-{% endhighlight %}
+```
 
 그러면 서버는 내부 에러 메시지를 표시하거나 로그에 기록하지 않고, 단순히 요청에 `500 Internal Server Error`로만 응답합니다.
 
@@ -30,7 +30,7 @@ HTTP POST 요청을 통해서 JSON을 받는 앱을 만드는 과정에서 재�
 
 다음은 제 앱의 웹 인터페이스 관련 코드 중 일부입니다. 코드 중에 `use Plug.Debugger`를 넣어두었습니다.
 
-{% highlight elixir %}
+```elixir
 defmodule UrlShortener.Web do
   use Plug.Router
   use Plug.Debugger
@@ -50,11 +50,11 @@ defmodule UrlShortener.Web do
   ...
   
 end
-{% endhighlight %}
+```
 
 저 매크로를 추가한 뒤에 코드를 컴파일해서 서버를 실행하면 서버가 내부적으로 에러 메시지를 로그에 기록하기 시작합니다.
 
-{% highlight elixir %}
+```elixir
 02:58:25.008 [debug] ** (Plug.Parsers.ParseError) malformed request, a Poison.SyntaxError exception was raised with message "Unexpected end of input"
     (plug) lib/plug/parsers/json.ex:54: Plug.Parsers.JSON.decode/2
     (plug) lib/plug/parsers.ex:210: Plug.Parsers.reduce/6
@@ -62,6 +62,6 @@ end
     (url_shortener) lib/plug/debugger.ex:123: UrlShortener.Web.call/2
     (plug) lib/plug/adapters/cowboy/handler.ex:15: Plug.Adapters.Cowboy.Handler.upgrade/4
     (cowboy) /Users/bonghyunkim/Documents/Projects/url_shortener/deps/cowboy/src/cowboy_protocol.erl:442: :cowboy_protocol.execute/4
-{% endhighlight %}
+```
 
 참고로 저 매크로를 사용하면 서버에서 에러를 보여주는 것 뿐 아니라, HTTP 요청에도 구체적인 에러 메시지를 응답으로 보내줍니다. 디버깅할 때 편리합니다.

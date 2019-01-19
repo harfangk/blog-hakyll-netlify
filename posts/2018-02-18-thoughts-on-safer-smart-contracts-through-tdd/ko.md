@@ -4,7 +4,7 @@ title: Safer Smart Contracts Through Type-Driven Development - 감상문
 
 ## 서문
 
-작년에 이드리스 언어에 관한 책을 한 권 읽고 [블로그 글을](https://harfangk.github.io/2017/10/24/tdd-with-idris-review-ko.html) 한 편 작성한 적이 있습니다. 그리고 그 글을 쓴 지 얼마 되지 않아 우연히 블록체인 기술을 다루는 회사에 입사해서 일을 하기 시작했습니다. 그러니 제가 최근 흥미를 가진 이 두 가지 주제를 함께 다룬 ["Safer smart contracts through type-driven development: Using dependent and polymorphic types for safer development of smart contracts"](https://publications.lib.chalmers.se/records/fulltext/234939/234939.pdf)라는 논문이 있다고 들었을 때 꼭 읽어봐야겠다는 생각을 하게 되었습니다.
+작년에 이드리스 언어에 관한 책을 한 권 읽고 [블로그 글을](./2017-10-23-tdd-with-idris-review.html) 한 편 작성한 적이 있습니다. 그리고 그 글을 쓴 지 얼마 되지 않아 우연히 블록체인 기술을 다루는 회사에 입사해서 일을 하기 시작했습니다. 그러니 제가 최근 흥미를 가진 이 두 가지 주제를 함께 다룬 ["Safer smart contracts through type-driven development: Using dependent and polymorphic types for safer development of smart contracts"](https://publications.lib.chalmers.se/records/fulltext/234939/234939.pdf)라는 논문이 있다고 들었을 때 꼭 읽어봐야겠다는 생각을 하게 되었습니다.
 
 이 글은 해당 논문을 읽으면서 가지게 된 생각을 정리한 글이며, 논문 내용에서 한 발짝 더 나아가거나 한 내용은 없습니다. 또한 글을 쓸 때 함수형 프로그래밍 패러다임, 특히 순수 함수와 사이드 이펙트 사이의 차이점에 대한 기본적인 이해를 가정하고 작성했으니 감안하고 읽어주시기 바랍니다.
 

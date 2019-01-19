@@ -12,18 +12,21 @@ Emmet의 장점이라면 역시 HTML과 CSS를 제대로 하는데만 집중한�
 
 보통 에디팅 모드에서는 [vim-ragtag](https://github.com/tpope/vim-ragtag) 를 써서 저 태그를 빠르게 입력하는데, Emmet으로 생성되는 결과물에는 그런 식으로 입력을 할 수가 없습니다. 예를 들어 다음 코드를 봅시다.
 
-{% highlight erb %}<div id="box">  <%= for user <- @users do %>
+```erb
+<div id="box">
+  <%= for user <- @users do %>
   	<ul>
   	  <li class="item1"></li>
   	  <li class="item2"></li>
   	  <li class="item3"></li>
-  	</ul>  <% end %>
+  	</ul>
+  <% end %>
 </div>
-{% endhighlight %}
+```
 
 Emmet을 사용하면 `div#box>ul>li.item$*3` 를 입력하고 확장변환 키를 입력합니다. 그러면 아래와 같은 코드가 생성됩니다.
 
-{% highlight erb %}
+```erb
 <div id="box">
   <ul>
    <li class="item1"></li>
@@ -31,7 +34,7 @@ Emmet을 사용하면 `div#box>ul>li.item$*3` 를 입력하고 확장변환 키�
    <li class="item3"></li>
   </ul>
 </div>
-{% endhighlight %}
+```
 
 여기에 `<%= for user <- @users do %>` 와 `<% end %>` 를 직접 입력하고 그 사이에 들어가는 내용을 들여쓰기 해줍니다. 꽤나 귀찮아요.
 
@@ -41,7 +44,8 @@ Emmet은 JSON과 JavaScript 파일을 사용하는 커스터마이제이션을 �
 
 이게 제 `custom_snippets.json`의 내용입니다.
 
-{% highlight json %}{
+```json
+{
   "eelixir": {
     "extends": "html",
     "snippets": {
@@ -55,7 +59,7 @@ Emmet은 JSON과 JavaScript 파일을 사용하는 커스터마이제이션을 �
     }
   }
 }
-{% endhighlight %}
+```
 
 삽질하면서 알게된 것들:
 
@@ -67,14 +71,16 @@ Emmet은 JSON과 JavaScript 파일을 사용하는 커스터마이제이션을 �
 
 이제 `div#box>eex>ul>li.item$*3` 를 입력하고 확장하면 다음과 같은 결과가 나옵니다.
 
-{% highlight erb %}
-<div id="box">  <%=  %>
+```erb
+<div id="box">
+  <%=  %>
   	<ul>
   	  <li class="item1"></li>
   	  <li class="item2"></li>
   	  <li class="item3"></li>
-    </ul>    <% end %>
+    </ul>
+  <% end %>
 </div>
-{% endhighlight %}
+```
 
 보시면 알겠지만 아직 `<% end %>` 부분에 들여쓰기 문제가 있습니다. 해결 중입니다. 그래도 이전에 비하면 훨씬 나아져서 꽤나 만족스럽습니다. 앞으로도 필요에 따라 계속 조정하면 되겠죠.

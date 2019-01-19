@@ -12,7 +12,7 @@ Another way is to rummage through `__ENV__.functions/0` which lists all the modu
 
 Here's an example.
 
-{% highlight elixir %}
+```elixir
 defmodule Foo do
   import Enum, only: [any?: 2]
   
@@ -37,7 +37,7 @@ iex> Foo.baz
    is_float: 1, is_function: 1, is_function: 2, is_integer: 1, is_list: 1,
    is_map: 1, is_number: 1, is_pid: 1, is_port: 1, is_reference: 1, is_tuple: 1,
    ...]}]
-{% endhighlight %}
+```
 
 ## Don't Import or Alias Too Many Modules
 

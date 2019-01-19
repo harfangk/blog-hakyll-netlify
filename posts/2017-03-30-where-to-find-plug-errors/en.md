@@ -16,11 +16,11 @@ While building an app that received JSON through HTTP POST requests, I noticed a
 
 So when I send a request with malformed JSON like:
 
-{% highlight json %}
+```json
 {
   "
 }
-{% endhighlight %}
+```
 
 The server would respond with `500 Internal Server Error` without displaying or logging internal error message.
 
@@ -30,7 +30,7 @@ The solution is to use `Plug.Debugger` in the module that uses `Plug.Router`.
 
 The following is part of the code for the web interface of my app. Notice the `use Plug.Debugger` I included here. 
 
-{% highlight elixir %}
+```elixir
 defmodule UrlShortener.Web do
   use Plug.Router
   use Plug.Debugger
@@ -50,11 +50,11 @@ defmodule UrlShortener.Web do
   ...
   
 end
-{% endhighlight %}
+```
 
 After calling that macro, your server now internally logs the error message. 
 
-{% highlight elixir %}
+```elixir
 02:58:25.008 [debug] ** (Plug.Parsers.ParseError) malformed request, a Poison.SyntaxError exception was raised with message "Unexpected end of input"
     (plug) lib/plug/parsers/json.ex:54: Plug.Parsers.JSON.decode/2
     (plug) lib/plug/parsers.ex:210: Plug.Parsers.reduce/6
@@ -62,6 +62,6 @@ After calling that macro, your server now internally logs the error message.
     (url_shortener) lib/plug/debugger.ex:123: UrlShortener.Web.call/2
     (plug) lib/plug/adapters/cowboy/handler.ex:15: Plug.Adapters.Cowboy.Handler.upgrade/4
     (cowboy) /Users/bonghyunkim/Documents/Projects/url_shortener/deps/cowboy/src/cowboy_protocol.erl:442: :cowboy_protocol.execute/4
-{% endhighlight %}
+```
 
 It also responds to the HTTP request with an error message, so that could be another way for debugging your app.

@@ -14,7 +14,7 @@ title: JSON Web Token (JWT)란 무엇인가?
 
 대충 내용물은 이렇습니다.
 
-{% highlight js %}
+```js
 { // headerJSON
   "alg": "HS256", // algorithm used for signature
   "typ": "JWT" // type of token
@@ -25,24 +25,24 @@ title: JSON Web Token (JWT)란 무엇인가?
   "name": "Leonardo DiCaprio", // custom keyword
   "canWinOscar": true // custom keyword
 }
-{% endhighlight %}
+```
 
 저 내용물은 이렇게 JWT로 전환합니다.
 
-{% highlight js %}
+```js
 header = base64_encode(headerJSON)
 payload = base64_encode(payloadJSON);
 signature = base64_encode(HMAC_SHA256(header + "." + payload, secret))
 jwt = header + "." + payload + "." + signature
-{% endhighlight %}
+```
 
 그러면 다음과 같은 결과물이 나옵니다.
 
-{% highlight js %}
+```js
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
 eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MzAwfQ.
 WlYm_cYdqaTioKJ4bvSqElSmymKLJQLTYIwSnhnomm4
-{% endhighlight %}
+```
 
 JWT가 무엇이고, 어떻게 사용해야할 지에 대해서는 다음 글이 도움이 되었습니다. [장문의 소개글](https://jwt.io/introduction/), [조금 더 짧은 소개글](https://stormpath.com/blog/jwt-the-right-way), [세션용으로 JWT 좀 쓰지마](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/), [세션용으로 JWT 좀 쓰지마 - 플로차트 추가 버전!](http://cryto.net/~joepie91/blog/2016/06/19/stop-using-jwt-for-sessions-part-2-why-your-solution-doesnt-work/), [이전 글에 대한 토론 스레드](https://news.ycombinator.com/item?id=11895440). 그래서 JWT는 뭐에 좋은 걸까요?
 

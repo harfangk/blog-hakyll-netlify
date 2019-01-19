@@ -18,7 +18,7 @@ title: 엘릭서의 패턴 매칭이 정말 사용하기 좋은 이유는?
 
 얼핏 보기에는 패턴 매칭은 조금 더 복잡한 스위치문처럼 보일 수도 있습니다. 하지만 패턴 매칭의 기능은 훨씬 강력합니다. 패턴 매칭을 사용하는 전형적인 엘릭서 코드를 살펴봅시다.
 
-{% highlight elixir %}
+```elixir
 def random(enumerable) do
   case Enumerable.count(enumerable) do
     {:ok, 0} ->
@@ -32,7 +32,7 @@ def random(enumerable) do
       end
   end
 end
-{% endhighlight %}
+```
 
 엘릭서 코어 라이브러리의 `Enum` 모듈에 들어 있는 함수입니다. 함수 이름에서 알 수 있듯이 주어진 `enumerable`에서 무작위로 요소를 선택해서 반환합니다. 먼저 `Enumerable.count/1` 함수를 호출합니다. 이 함수는 일반적인 엘릭서 컨벤션을 따라 `{:ok, value}` 또는 `{:error, message}`라는 요소 두개짜리 튜플을 반환합니다. 그리고 함수는 그 반환 값에 대해서 패턴 매칭을 하고, 매치 결과에 따라서 적절한 함수를 호출합니다.
 
@@ -66,7 +66,7 @@ FP에서는 이 세 가지 작업을 묶어서 `디스트럭쳐링(destructuring
 
 multi-clause function은 패턴 매칭과 관련된 유용한 편의성 문법입니다. 앞서 소개한 `Enum.random/1` 함수의 전체 정의는 사실 다음과 같습니다.
 
-{% highlight elixir %}
+```elixir
 @spec random(t) :: element | no_return
 def random(enumerable)
 
@@ -86,13 +86,13 @@ def random(enumerable) do
       end
   end
 end
-{% endhighlight %}
+```
 
 첫 두 줄은 함수의 타입 스펙이며 이 글과는 무관하니 생략하고 나머지 코드를 봅시다.
 
 동일한 이름으로 정의된 함수가 두 개 있습니다. 이는 패턴 매칭 케이스를 multi-clause function으로 분리할 수 있게 해주는 편의성 문법입니다. 실제로 다음과 같이 작성한 코드도 위의 코드와 동일하게 동작합니다.
 
-{% highlight elixir %}
+```elixir
 @spec random(t) :: element | no_return
 def random(enumerable)
 
@@ -113,7 +113,7 @@ def random(enumerable) do
       end
   end
 end
-{% endhighlight %}
+```
 
 코드를 비교해보면, 가장 상위 단계의 패턴 매칭을 여러 개의 함수 정의로 분리했을 뿐이라는 것을 알 수 있습니다. 얼핏 보기에는 그리 중요하지 않은 이 기능에 어떤 의의가 있을까요? 바로 함수를 시각적으로 명확히 구분할 수 있는 작은 부분들로 함수를 분리할 수 있게 해준다는 것입니다. 코드를 분리하면 읽는 이가 머리 속에 담아두어야 할 코드의 전체 양이 줄어들어서 코드를 이해하고 유지보수하기 더 쉬워집니다.
 
@@ -123,18 +123,18 @@ end
 
 패턴 매칭을 사용한 실제 예시를 하나 더 살펴봅시다. 재귀는 함수형 프로그래밍의 기본적인 기법으로, 패턴 매칭과 매우 잘 맞습니다. 아래 코드는 엘릭서 코어 라이브러리의 `Enum.reverse/1` 함수로 `enumerable`을 받은 뒤 리스트 안의 요소를 역순으로 뒤집어서 반환합니다. 
 
-{% highlight elixir %}
+```elixir
 @spec reverse(t) :: list
 def reverse([]), do: []
 def reverse([_] = l), do: l
 def reverse([a, b]), do: [b, a]
 def reverse([a, b | l]), do: :lists.reverse(l, [b, a])
 def reverse(enumerable), do: reduce(enumerable, [], &[&1 | &2])
-{% endhighlight %}
+```
 
 다음은 동일한 함수를 multi-clause function을 사용하지 않고 작성한 코드입니다.
 
-{% highlight elixir %}
+```elixir
 @spec reverse(t) :: list
 def reverse(enumerable) do
   []         -> []
@@ -143,7 +143,7 @@ def reverse(enumerable) do
   [a, b | l] -> :lists.reverse(l, [b, a])
   enumerable -> reduce(enumerable, [], &[&1 | &2])
 end
-{% endhighlight %}
+```
 
 이 예시에서 재귀 함수의 베이스 케이스는 첫 세 케이스입니다. Multi-clause function을 사용하면 베이스 케이스가 더 명확히 분리됩니다. 재귀 함수를 이해하려면 베이스 케이스를 이해하는 것이 필수적임을 생각해보면, 이를 시각적으로 돋보이게 해주는 패턴 매칭은 도움이 됩니다.
 

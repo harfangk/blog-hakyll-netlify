@@ -49,7 +49,7 @@ good enough. Or depending on the situation and personality, you improve it
 until you believe you can't write any better. In writing, it's known as
 revising or editing. In software development, it's known as iterative
 development or refactoring. But regardless of how you put it, the process is
-about constant exploration and experimentation, not a single masterful stroke. 
+about constant exploration and experimentation, not a single masterful stroke.
 
 ## A personal illustration
 
@@ -74,7 +74,7 @@ A haiku? It could work. Or something outside such traditional formats? A poem
 that I really liked pops into my mind: <a
 href="https://www.poets.org/poetsorg/poem/just-say">This Is Just To Say</a> by
 William Carlos Williams. The nonchalant cheerfulness of that poem fascinated
-me, so I decide to try writing something similar. 
+me, so I decide to try writing something similar.
 
 For software, let's say I want to develop something that would help people
 learn how to speak English. Embedded software or shell scripts would not be
@@ -83,7 +83,7 @@ mobile application all seem to be solid choices. My application would be
 something fairly simple, so I do not think it would require the power of
 a desktop application. After some thoughts, I decide that having a microphone
 and a speaker would be a crucial requirement, so I choose mobile application.
-After all, all smart phones come equipped with both. 
+After all, all smart phones come equipped with both.
 
 For my mobile application, I have yet more decisions to make. Should I make
 a hybrid application, or a native application? Their respective strengths and
@@ -94,40 +94,40 @@ Swift all the way and try one of the new Swift backends. My application
 wouldn't need anything serious from the backend, so I am okay with
 experimenting. <a href="http://qutheory.io">Vapor framework</a> seems to
 provide the most thorough documentation and most concise syntax, so I decide to
-go with it. 
+go with it.
 
-### Write, revise, write, refactor, ... 
+### Write, revise, write, refactor, ...
 
 I experiment with some ideas.
 
-I took a cookie  
-then another  
-and then another  
-and then another  
-and I shouldn't have  
+I took a cookie
+then another
+and then another
+and then another
+and I shouldn't have
 
-Well, that's silly - I'll at least give it that. I try something else. 
+Well, that's silly - I'll at least give it that. I try something else.
 
-This empty cookie jar  
-once held four cookies  
-but they all decided to  
-move into my stomach  
+This empty cookie jar
+once held four cookies
+but they all decided to
+move into my stomach
 
-That wasn't a healthy decision  
+That wasn't a healthy decision
 either for them or me
 
 It's still silly. I'm not quite happy with it. I start to get convinced that
 everything I write will be equally disastrous. I keep writing it again and
 again, experimenting with different words and structures. I keep doing it until
 I feel like "Screw this! I've tried enough!" or until I reach a deadline for
-publishing it. 
+publishing it.
 
 What about software development? Let's say in the process of coding, I found
 out that I need to multiply an array of integers by 10. I have multiple
 approaches to achieve that. First I decide to go with the old-fashioned C-style
 loop.
 
-{% highlight swift linenos %}
+``` swift
 let applicationUsageCounts = [3, 8, 9, 11, 2]
 var multipliedApplicationUsageCounts = [Int]()
 for var i = 0; i < applicationUsageCounts.count; i++ {
@@ -135,38 +135,38 @@ for var i = 0; i < applicationUsageCounts.count; i++ {
   multipliedApplicationUsageCounts.append(j)
 }
 multipliedApplicationUsageCounts // [30, 80, 90, 110, 20]
-{% endhighlight %}
+```
 
 It does its job. But C-style loop goes against Swift's coding style. Moreover,
 I heard that C-style loop and ++ operator will be both deprecated in the
 upcoming Swift 3.0 version. So I get to cleaning and improving my code.
 
-{% highlight swift linenos %}
+``` swift
 var multipliedApplicationUsageCounts = [Int]()
 for count in applicationUsageCounts {
   multipliedApplicationUsageCounts.append(count * 10)
 }
 multipliedApplicationUsageCounts // [30, 80, 90, 110, 20]
-{% endhighlight %}
+```
 
 This is a fairly standard iteration over an array. It does what I need it to
 do. But then I discover another case where I need to multiply an array of
 integers, this time with a different multiplier. I extract that iteration and
 multiplication part into a function. While I am at it, I decide to use a more
-functional programming style of code by using the map method. 
+functional programming style of code by using the map method.
 
-{% highlight swift linenos %}
+``` swift
 func multiplyArray(array: [Int], withMultiplier: Int) -> [Int] {
     return array.map( { $0 * withMultiplier } )
 }
 let result = multiplyArray(applicationUsageCounts, withMultiplier: 10) // [30, 80, 90,
     110, 20]
-{% endhighlight %}
+```
 
 I wonder if I should modify that function to also support an array of rational
 numbers, not just integers, but decide to wait until I really need that kind of
 generic function. I move onto the next part of my application, then repeat this
-process of writing code and changing and improving it. 
+process of writing code and changing and improving it.
 
 ### Conclusion
 

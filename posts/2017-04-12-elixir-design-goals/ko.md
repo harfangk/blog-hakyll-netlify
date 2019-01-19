@@ -46,7 +46,7 @@ August 08, 2013 · by José Valim . in Internals
 
 여러 언어에 키워드로 구현되어 있는 `unless`를 엘릭서에서 구현하는 예시입니다.
 
-{% highlight elixir %}
+```elixir
 defmacro unless(expr, opts) do
   quote do
     if(!unquote(expr), unquote(opts))
@@ -56,13 +56,13 @@ end
 unless true do
   IO.puts "this will never be seen"
 end
-{% endhighlight %}
+```
 
 코드 표현을 인자로 받는 매크로 덕분에 우리는 컴파일 타임에 `unless`를 `if`로 간단히 변환할 수 있습니다. 
 
 매크로는 엘릭서의 메타프로그래밍, 즉 코드를 생성하는 코드를 작성할 수 있는 기능의 기본적인 구성요소이기도 합니다. 메타프로그래밍은 개발자가 손쉽게 보일러플레이트 코드를 제거하고 강력한 도구를 만들 수 있게 해줍니다. 발표에서 테스트 프레임워크의 표현력을 위해서 매크로를 사용한다는 예시를 자주 사용했었습니다. 한 번 그 예시를 살펴봅시다.
 
-{% highlight elixir %}
+```elixir
 ExUnit.start
 
 defmodule MathTest do
@@ -72,7 +72,7 @@ defmodule MathTest do
     assert 1 + 2 == 4
   end
 end
-{% endhighlight %}
+```
 
 처음 눈에 띄는 것은 `async: true` 옵션입니다. 테스트에 사이드 이펙트가 없으면 `async: true` 옵션을 넣어서 병렬로 테스트를 실행할 수 있습니다. 
 
@@ -80,13 +80,13 @@ end
 
 하지만 엘릭서의 `assert`는 매크로이기 때문에, 어설션의 대상이 되는 코드를 살펴보고 해당 코드가 비교를 실행한다는 것을 추론할 수 있습니다. 그렇게 분석한 후 해당 코드를 변환하여, 테스트가 실행되면 구체적인 에러 리포트를 제공하도록 만듭니다. 
 
-{% highlight elixir %}
+```elixir
 1) test adding two numbers (MathTest)
    ** (ExUnit.ExpectationError)
                 expected: 3
      to be equal to (==): 4
    at test.exs:7
-{% endhighlight %}
+```
 
 이 간단한 예시에서 개발자가 매크로를 사용해서 간결하지만 강력한 API를 제공할 수 있는 방법을 볼 수 있습니다. 매크로는 컴파일 환경 전체에 접근할 수 있기 때문에 임포트된 함수, 매크로, 정의된 변수 등을 확인하고 사용할 수 있습니다.
 
@@ -98,53 +98,53 @@ end
 
 문법은 엘릭서에 대해서 이야기할 때 보통 가장 먼저 나오는 주제 중 하나이긴 하지만, 우리의 목표는 단순히 다른 문법을 제공하는 것이 아닙니다. 우리는 매크로 시스템을 제공하고 싶었고, 그러기 위해서는 엘릭서의 자체적인 데이터 구조를 사용해서 엘릭서 문법을 명시적으로 표현할 수 있어야만 했습니다. 이런 목표를 염두에 두고 우리가 설계한 최초의 엘릭서 버전은 다음과 같이 생겼었습니다. 
 
-{% highlight elixir %}
+```elixir
 defmodule(Hello, do: (
   def(calculate(a, b, c), do: (
     =(temp, *(a, b))
     +(temp, c)
   ))
 ))
-{% endhighlight %}
+```
 
 위 코드에서는 변수를 제외한 모든 것을 함수 또는 매크로 호출로 표현했습니다. 첫 버전에서부터 `do:` 같은 키워드 인자가 존재했다는 점에 주목해주세요. 우리는 여기에다가 새로운 문법을 천천히 추가해서, 자주 사용하는 패턴을 보다 세련되게 만드는 동시에 그 기반이 되는 데이터적 표현의 동일성을 유지했습니다. 연산자에도 곧 인픽스 표기법을 추가했습니다.
 
-{% highlight elixir %}
+```elixir
 defmodule(Hello, do: (
   def(calculate(a, b, c), do: (
     temp = a * b
     temp + c
   ))
 ))
-{% endhighlight %}
+```
 
 괄호를 선택사항으로 만드는 것이 다음 단계였습니다.
 
-{% highlight elixir %}
+```elixir
 defmodule Hello, do: (
   def calculate(a, b, c), do: (
     temp = a * b
     temp + c
   )
 )
-{% endhighlight %}
+```
 
 그리고 마지막으로 자주 사용되는 `do: (...)` 구성요소를 더 간편하게 쓸 수 있도록 `do/end`를 추가했습니다.
 
-{% highlight elixir %}
+```elixir
 defmodule Hello do
   def calculate(a, b, c) do
     temp = a * b
     temp + c
   end
 end
-{% endhighlight %}
+```
 
 제게 루비 경력이 있는 만큼 추가된 구성요소 중 일부를 루비에서 빌려오는 것은 자연스러운 수순이었습니다. 하지만 그렇게 추가된 부분은 부산물이었지 언어의 목표는 아니었습니다.
 
 언어 구문 중 여럿은 또한 그에 대응되는 얼랭 구성요소에서 따왔습니다. 제어 흐름 매크로, 연산자, 컨테이너 등이 그 예시입니다. 일부 엘릭서 코드가 어떻게 얼랭에 대응하는지 보세요.
 
-{% highlight elixir %}
+```elixir
 # A tuple
 tuple = { 1, 2, 3 }
 
@@ -156,9 +156,9 @@ case expr do
   { x, y } -> x + y
   other when is_integer(other) -> other
 end
-{% endhighlight %}
+```
 
-{% highlight erlang %}
+```erlang
 % A tuple
 Tuple = { 1, 2, 3 }.
 
@@ -170,7 +170,7 @@ case Expr of
   { X, Y } -> X + Y;
   Other when is_integer(Other) -> Other
 end.
-{% endhighlight %}
+```
 
 ## 확장성
 
@@ -190,7 +190,7 @@ end.
 
 위에 언급된 기능 대부분에는 자체적인 확장 메커니즘이 있습니다. 예를 들어 `Enum` 모듈을 봅시다. `Enum` 모듈은 내장된 레인지, 리스트, 셋 등의 데이터 타입을 열거할 수 있도록 해줍니다.
 
-{% highlight elixir %}
+```elixir
 list = [1, 2, 3]
 Enum.map list, fn(x) -> x * 2 end
 #=> [2, 4, 6]
@@ -202,7 +202,7 @@ Enum.map range, fn(x) -> x * 2 end
 set = HashSet.new [1, 2, 3]
 Enum.map set, fn(x) -> x * 2 end
 #=> [2, 4, 6]
-{% endhighlight %}
+```
 
 그 뿐 아니라 모든 개발자는 어떤 데이터 타입에건 [`Enumerable` 프로토콜](https://hexdocs.pm/elixir/Enumerable.html)을 구현하기만 하면 `Enum` 모듈을 **익스텐드**해서 해당 데이터 타입에 사용할 수 있습니다. 개발자가 셋, 리스트, 딕셔너리용 개별적 API를 외우는 대신 `Enum` API만 알면 열거를 할 수 있게 해주는 매우 간편한 방식입니다.
 

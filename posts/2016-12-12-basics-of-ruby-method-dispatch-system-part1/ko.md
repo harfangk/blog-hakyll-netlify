@@ -31,7 +31,7 @@ title: 루비 메서드 디스패치 시스템 이해하기 (Part 1)
 
 먼저 루비 프로그램에서 일반적으로 사용되는 구조 중에서 가장 간단한 것을 살펴보겠습니다. 이 글에서 사용할 기본 개념과 도구를 여기서 다룰 것이기 때문에 아마 가장 긴 부분이 될 것입니다. 
 
-{% highlight ruby %}
+```ruby
 class BasicClass
   def basic_class_method
   end
@@ -39,17 +39,17 @@ end
 
 basic_class_instance = BasicClass.new
 => #<BasicClass:0x007fedd2261138>
-{% endhighlight %}
+```
 
 `basic_class_method`라는 인스턴스 메서드를 가진 `BasicClass`를 정의했고, `BasicClass`의 새 인스턴스를 생성해서 `basic_class_instance`라고 이름 붙였습니다.
 
-{% highlight ruby %}
+```ruby
 basic_class_instance.class
 => BasicClass
 
 BasicClass.class
 => Class
-{% endhighlight %}
+```
 
 `class` 메서드는 루비 스탠다드 라이브러리의 `Class`에 정의되어 있는 메서드인데, 어떤 객체에 이를 호출하면 그 객체의 클래스를 반환합니다. 코드에 나와 있듯이 `basic_class_instance`는 `BasicClass`의 인스턴스입니다. 생각대로입니다.
 
@@ -57,7 +57,7 @@ BasicClass.class
 
 루비에서는 모든 것이 객체입니다. 이는 여러 가지 의미를 가질 수 있는데, 여기서는 객체가 생성되는 부분에 대해서만 생각해 봅시다. 대부분의 객체지향 언어에서 객체는 클래스의 인스턴스로서 생성됩니다. 하지만 루비에서는 모든 것이 객체라고 앞서 말했으며, 클래스도 예외가 아닙니다. 즉, 프로그래머가 정의한 클래스는 사실 `Class` 클래스의 인스턴스로서 생성되는 것이죠. 재귀적인 방식이니 처음 접하는 개념이라면 한 번 시간을 들여 생각해보면 좋습니다.
 
-{% highlight ruby %}
+```ruby
 BasicClass.ancestors
 => [BasicClass, Object, Kernel, BasicObject]
 
@@ -66,7 +66,7 @@ BasicClass.class.ancestors
 
 BasicClass.instance_method(:basic_class_method)
 => #<UnboundMethod: BasicClass#basic_class_method>
-{% endhighlight %}
+```
 
 `ancestors` 메서드는 루비 스탠다드 라이브러리에 있는 `Module`에 정의되어 있습니다. 어떤 클래스나 모듈의 조상을 전부 보여줍니다.
 
@@ -76,10 +76,10 @@ BasicClass.instance_method(:basic_class_method)
 
 `Class`에는 `Module`에 없는 기능이 몇 가지 있는데, 예를 들어 객체를 생성하는 기능 등입니다. `Class`와 `Module`의 차이점에 대해서는 별개의 글을 써야 할 것 같으니 여기서는 더 이상 다루지 않겠습니다. 이 글에서 사용할 다음 도구를 볼까요.
 
-{% highlight ruby %}
+```ruby
 BasicClass.instance_method(:basic_class_method)
 => #<UnboundMethod: BasicClass#basic_class_method>
-{% endhighlight %}
+```
 
 `instance_method`는 `Module`에 정의되어 있는데, 아규먼트로 받은 인스턴스 메서드를 표현하는 `UnboundMethod`를 반환합니다. 이 경우에는 `basic_class_method`가 `BasicClass`에 `basic_class_method`라는 이름으로 정의되어 있는 `UnboundMethod`라는 것을 의미합니다. 이름에 대한 부분은 중복되는 것처럼 느껴질 수도 있지만 alias를 사용한 메서드를 다룰 때는 매우 유용합니다.
 
@@ -89,7 +89,7 @@ BasicClass.instance_method(:basic_class_method)
 
 이 부분에서는 일반적으로 사용하는 또다른 구조를 살펴보겠습니다. 바로 슈퍼클래스와 서브클래스입니다. 전 부분에서 소개한 도구를 사용해서 살펴보기만 할 것이며 새로운 개념은 없습니다. 
 
-{% highlight ruby %}
+```ruby
 class SuperClass
   def super_class_method
   end
@@ -99,23 +99,23 @@ class BasicClass < SuperClass
   def basic_class_method
   end
 end
-{% endhighlight %}
+```
 
 `SuperClass`를 새로 만들고 `BasicClass`가 그로부터 상속 받도록 했습니다. 조상 목록을 살펴봅시다.
 
-{% highlight ruby %}
+```ruby
 BasicClass.ancestors
 => [BasicClass, SuperClass, Object, Kernel, BasicObject]
 
 SuperClass.ancestors
 => [SuperClass, Object, Kernel, BasicObject]
-{% endhighlight %}
+```
 
 `BasicClass`에는 `SuperClass`라는 조상이 추가됐습니다. 특별할 것 없는 내용입니다.
 
 `instance_method`를 살펴봅시다.
 
-{% highlight ruby %}
+```ruby
 SuperClass.instance_method(:super_class_method)
 => #<UnboundMethod: SuperClass#super_class_method>
 
@@ -127,7 +127,7 @@ NameError: undefined method `basic_class_method' for class `SuperClass'
 
 BasicClass.instance_method(:super_class_method)
 => #<UnboundMethod: BasicClass(SuperClass)#super_class_method>
-{% endhighlight %}
+```
 
 세 번째까지는 별다른 내용이 없습니다.. `SuperClass`에는 `super_class_method`가 있고, `BasicClass`에는 `basic_class_method`가 있고, `SuperClass`에는 `basic_class_method`가 없습니다. 
 
@@ -139,7 +139,7 @@ BasicClass.instance_method(:super_class_method)
 
 루비에서 모듈 믹싱은 클래스 상속과 더불어 데이터와 함수를 관리하고 네임스페이스를 만들기 위해 사용됩니다. 모듈이 믹싱되면 그 모듈의 상수, 메서드, 모듈 변수가 대상 모듈에 추가됩니다. 조상 목록에서 모듈 믹싱이 어떻게 표현되는지 살펴봅시다.
 
-{% highlight ruby %}
+```ruby
 module ModuleIncludedToBasicClass
   def method_included_to_basic_class
   end
@@ -203,13 +203,13 @@ class BasicClass < SuperClass
     super
   end
 end
-{% endhighlight %}
+```
 
 `ModuleIncludedToBasicClass`, `ModulePrependedToBasicClass`, `ModuleIncludedToSuperClass`, `ModulePrependedToSuperClass`라는 네 개의 모듈이 추가 되었는데, 각자 하는 일은 자명할 것입니다. 또 각 모듈과 클래스마다 `defined_in`이라는 인스턴스 메서드를 새로 정의했습니다. 호출이 되면 자신이 정의된 장소를 출력하고, `super`를 호출해 조상 목록에서 자신과 같은 이름을 가진 메서드를 호출합니다.
 
 모듈을 믹싱하는 방법에는 두 가지가 있는데, 루비 스탠다드 라이브러리의 `Module`에 정의되어 있습니다. `include`는 예전부터 있었고, `prepend`는 루비 2.0에 추가되었습니다. 어떻게 다른지는 조상 목록을 보면 더 잘 이해가 될 것입니다.
 
-{% highlight ruby %}
+```ruby
 BasicClass.ancestors
 => [ModulePrependedToBasicClass, BasicClass, ModuleIncludedToBasicClass, 
 ModulePrependedToSuperClass, SuperClass, ModuleIncludedToSuperClass, 
@@ -218,11 +218,11 @@ Object, Kernel, BasicObject]
 SuperClass.ancestors
 => [ModulePrependedToSuperClass, SuperClass, ModuleIncludedToSuperClass, 
 Object, Kernel, BasicObject]
-{% endhighlight %}
+```
 
 실행 결과에서 보이듯이 `prepend`는 조상 목록에서 대상 모듈 이전에 호출된 모듈을 추가하는 반면 `include`는 대상 모듈 이후에 호출된 모듈을 추가합니다. 이는 메서드 오버라이드와 `super` 메서드 호출에 영향을 줍니다.
 
-{% highlight ruby %}
+```ruby
 basic_class_instance = BasicClass.new
 => #<BasicClass:0x007fbf9b2527b0>
 basic_class_instance.defined_in
@@ -233,19 +233,19 @@ This method is defined in ModulePrependedToSuperClass
 This method is defined in SuperClass
 This method is defined in ModuleIncludedToSuperClass
 NoMethodError: super: no superclass method `defined_in' for #<BasicClass:0x007fbf9b2527b0>
-{% endhighlight %}
+```
 
 메서드 호출 순서가 조상 목록과 동일한 것을 볼 수 있습니다. 마지막의 `NoMethodError`는 `Object`에 `defined_in`가 정의되어 있지 않아서 발생합니다.
 
 여기서 알 수 있는 점은 모듈 믹싱이 뭔가 특별한 것이 아니고 상속을 구현하는 방법 중 하나일 뿐이라는 것입니다. 그래도 매우 가볍고 다루기 쉽게 다중 상속을 구현하는 방식으로 매우 가치가 높습니다.
 
-{% highlight ruby %}
+```ruby
 BasicClass.instance_method(:method_included_to_super_class)
 => #<UnboundMethod: BasicClass(ModuleIncludedToSuperClass)#method_included_to_super_class>
 
 BasicClass.instance_method(:method_prepended_to_basic_class)
 => #<UnboundMethod: BasicClass(ModulePrependedToBasicClass)#method_prepended_to_basic_class>
-{% endhighlight %}
+```
 
 `instance_method`를 호출하면 `BasicClass`에 있는 인스턴스 메서드가 실제로 정의가 된 곳은 어디인지 알 수 있습니다. 예상 외의 결과는 없습니다.
 

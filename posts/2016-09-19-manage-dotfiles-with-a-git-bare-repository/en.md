@@ -14,12 +14,12 @@ And then I found what I was looking for. This method uses a <a href="http://www.
 
 Git is the only dependency. The following four lines will set up the bare repository.
 
-{% highlight bash %}
+``` bash
 git init --bare $HOME/.dotfiles.git
 echo 'alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"' >> $HOME/.zshrc
 source ~/.zshrc
 dotfiles config --local status.showUntrackedFiles no
-{% endhighlight %}
+```
 
 1. Create a git bare repository at `~/.dotfiles.git` to track files.
 2. Add alias setting to shell configuration file. I use zsh so it's `.zshrc`. For bash, it'd be `.bashrc`. Note how the paths for git directory and working tree are set.
@@ -28,26 +28,26 @@ dotfiles config --local status.showUntrackedFiles no
 
 That finishes the setup. Use the aliased command from the home directory to manage files, and use git remote repo if you want to manage the files online.
 
-{% highlight bash %}
+``` bash
 dotfiles status
 dotfiles add .vimrc
 dotfiles commit -m "Add vimrc"
 dotfiles remote add origin https://www.github.com/username/repo.git
 dotfiles push origin master
-{% endhighlight %}
+```
 
 ### Installing dotfiles to another system
 
 It just needs two shell commands before fetching the remote repo.
 
-{% highlight bash %}
+``` bash
 echo 'alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"' >> $HOME/.zshrc
 source ~/.zshrc
 echo ".dotfiles.git" >> .gitignore
 git clone --bare https://www.github.com/username/repo.git $HOME/.dotfiles.git
 dotfiles checkout
 dotfiles config --local status.showUntrackedFiles no
-{% endhighlight %}
+```
 
 1. Create alias to ensure that the git bare repository works without problem.
 2. Reload the shell setting to use that alias.

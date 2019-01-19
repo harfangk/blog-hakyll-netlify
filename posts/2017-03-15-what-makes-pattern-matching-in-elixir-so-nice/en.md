@@ -18,7 +18,7 @@ Other people have already written good explanations about pattern matching, so I
 
 At first glance, pattern matching might look like a slightly more complicated switch statement. But it's much more powerful than that. Let's take a look at an example of typical Elixir code that uses pattern matching.
 
-{% highlight elixir %}
+```elixir
 def random(enumerable) do
   case Enumerable.count(enumerable) do
     {:ok, 0} ->
@@ -32,7 +32,7 @@ def random(enumerable) do
       end
   end
 end
-{% endhighlight %}
+```
 
 This is a function in `Enum` module from Elixir core library. As its name suggests, it returns a random element from the given `enumerable`. It first calls the `Enumerable.count/1` function, which returns a two-element tuple of `{:ok, value}` or `{:error, message}`, following a common convention in Elixir. Then it pattern matches that return value and calls appropriate functions based on the match. 
 
@@ -66,7 +66,7 @@ But it doesn't stop there.
 
 A useful syntactic sugar for pattern matching is multi-clause function. The full definition of the `Enum.random/1` function I've introduced above actually looks like this:
 
-{% highlight elixir %}
+```elixir
 @spec random(t) :: element | no_return
 def random(enumerable)
 
@@ -86,13 +86,13 @@ def random(enumerable) do
       end
   end
 end
-{% endhighlight %}
+```
 
 The first two lines are type specifications for the function, so they are not relevant for this post. Let's look at the rest of the function definition.
 
 You can see that there are two function definitions with identical names. It is a syntactic sugar to separate pattern matching cases into multi-clause function. In fact, the above function definition is equivalent to the following code:
 
-{% highlight elixir %}
+```elixir
 @spec random(t) :: element | no_return
 def random(enumerable)
 
@@ -113,7 +113,7 @@ def random(enumerable) do
       end
   end
 end
-{% endhighlight %}
+```
 
 If you compare the two versions, you can see it's just splitting the outermost pattern matching into multiple function clauses. So what's so great about this seemingly mundane feature? Multi-clause functions are great because they provide a visually discernible way to break down functions into smaller parts. Such a separation reduces the amount of code you must hold in your head to understand the function, making it much easier to write and understand functions.
 
@@ -123,17 +123,17 @@ Remember that pattern matching is already being used to destructure data and man
 
 Let's take a look at another practical example of pattern matching. Recursion is a basic building block of functional programming, and it works seamlessly well with pattern matching. Here's `Enum.reverse/1` function from Elixir core library, which takes an enumerable and returns a list with elements in reverse order.
 
-{% highlight elixir %}
+```elixir
 @spec reverse(t) :: list
 def reverse([]), do: []
 def reverse([_] = l), do: l
 def reverse([a, b]), do: [b, a]
 def reverse([a, b | l]), do: :lists.reverse(l, [b, a])
 def reverse(enumerable), do: reduce(enumerable, [], &[&1 | &2])
-{% endhighlight %}
+```
 The following code is the same function written without using multi-clause function.
 
-{% highlight elixir %}
+```elixir
 @spec reverse(t) :: list
 def reverse(enumerable) do
   []         -> []
@@ -142,7 +142,7 @@ def reverse(enumerable) do
   [a, b | l] -> :lists.reverse(l, [b, a])
   enumerable -> reduce(enumerable, [], &[&1 | &2])
 end
-{% endhighlight %}
+```
 Notice how multiple clauses make the base case, the first three cases in this example, more discernible. Considering that understanding the base case is crucial to understanding a recursive function, such a visual assistance through pattern matching is definitely helpful.
 
 ## Elixir Uses Simple Data Types

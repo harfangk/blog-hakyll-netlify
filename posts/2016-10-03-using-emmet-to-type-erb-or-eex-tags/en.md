@@ -12,18 +12,21 @@ But I usually write Embedded Ruby (.erb) or Embedded Elixir (.eex), and they hav
 
 I have [vim-ragtag](https://github.com/tpope/vim-ragtag) for writing those tags faster, but I can't automatically insert it into the structured output of Emmet. For example, let's say I wanted to type the following structure.
 
-{% highlight erb %}<div id="box">  <%= for user <- @users do %>
+```erb
+<div id="box">
+  <%= for user <- @users do %>
   	<ul>
   	  <li class="item1"></li>
   	  <li class="item2"></li>
   	  <li class="item3"></li>
-  	</ul>  <% end %>
+  	</ul>
+  <% end %>
 </div>
-{% endhighlight %}
+```
 
 With Emmet, I would type `div#box>ul>li.item$*3` and expand it. That will give me this.
 
-{% highlight erb %}
+```erb
 <div id="box">
   <ul>
    <li class="item1"></li>
@@ -31,7 +34,7 @@ With Emmet, I would type `div#box>ul>li.item$*3` and expand it. That will give m
    <li class="item3"></li>
   </ul>
 </div>
-{% endhighlight %}
+```
 
 Then I will have to manually type in `<%= for user <- @users do %>` and `<% end %>`, and indent the contents within that block. That's quite annoying.
 
@@ -41,7 +44,7 @@ Emmet's customization comes in the form of JSON and JavaScript files. Each edito
 
 This is what my `custom_snippets.json` looks like. 
 
-{% highlight json %}
+```json
 {
   "eelixir": {
     "extends": "html",
@@ -56,7 +59,7 @@ This is what my `custom_snippets.json` looks like.
     }
   }
 }
-{% endhighlight %}
+```
 
 Some points that I learned:
 
@@ -68,14 +71,16 @@ Some points that I learned:
 
 Now I can type `div#box>eex>ul>li.item$*3` and expand it, which gives me this.
 
-{% highlight erb %}
-<div id="box">  <%=  %>
+```erb
+<div id="box">
+  <%=  %>
   	<ul>
   	  <li class="item1"></li>
   	  <li class="item2"></li>
   	  <li class="item3"></li>
-    </ul>    <% end %>
+    </ul>
+  <% end %>
 </div>
-{% endhighlight %}
+```
 
 As you can see, there's an indentation issue with `<% end %>` which I'm trying to resolve. But this is still a great improvement over previous workflow, and I will keep tweaking it.

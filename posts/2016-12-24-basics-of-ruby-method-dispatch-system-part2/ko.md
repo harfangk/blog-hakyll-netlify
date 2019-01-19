@@ -24,7 +24,7 @@ title: 루비 메서드 디스패치 시스템 이해하기 (Part 2)
 ## Level 3: 싱글턴 메서드
 루비에서는 특정한 객체만이 유일하게 가지고 있고 다른 객체에는 공유되지 않는 메서드를 정의할 수 있습니다. 단 하나의 객체에만 정의되어 있기 때문에 싱글턴 메서드 `singleton method`라고 불립니다. 
 
-{% highlight ruby %}
+```ruby
 class BasicClass
   def basic_class_instance_method
   end
@@ -35,13 +35,13 @@ basic_class_instance_b = BasicClass.new
 
 basic_class_instance_a.define_singleton_method(:singleton_method_of_a) do
 end
-{% endhighlight %}
+```
 
 여기서는 `basic_class_instance_method`라는 인스턴스 메서드를 가진 `BasicClass`를 정의하고, 각각 `basic_class_instance_a`와 `basic_class_instance_b`라고 명명한 `BasicClass`의 인스턴스 두 개를 생성했습니다.
 
 그리고 나서 `singleton_method_of_a`를 `basic_class_instance_a`에 정의했습니다. 의도한 대로 정의가 되었는지 확인을 해봅시다.
 
-{% highlight ruby %}
+```ruby
 basic_class_instance_a.method(:basic_class_instance_method).owner
 => BasicClass
 
@@ -53,7 +53,7 @@ basic_class_instance_a.method(:singleton_method_of_a).onwer
 
 basic_class_instance_b.method(:singleton_method_of_a).owner
 NameError: undefined method `singleton_method_of_a' for class `BasicClass'
-{% endhighlight %}
+```
 
 `basic_class_instance_method`는 두 인스턴스 모두에서 호출이 가능하며, `BasicClass`에 정의되어 있다고 표시됩니다. 하지만 `singleton_method_of_a`는 `BasicClass`가 아니라 `#<Class:BasicClass>`라는 것에 정의되어 있으며, `basic_class_instance_a`에서는 호출할 수 있지만 `basic_class_instance_b`에서는 호출할 수 없습니다. 특정 객체에 싱글턴 메서드를 추가하는데 성공했습니다.
 
@@ -82,7 +82,7 @@ NameError: undefined method `singleton_method_of_a' for class `BasicClass'
 
 ### 싱글턴 클래스 확인하기
 
-{% highlight ruby %}
+```ruby
 basic_class_instance_a.class
 => BasicClass
 
@@ -94,7 +94,7 @@ basic_class_instance_a.singleton_class
 
 basic_class_instance_b.singleton_class
 => #<BasicClass:0x007fb5a1890720>
-{% endhighlight %}
+```
 
 `class`와 `singleton_class`는  루비 코어 라이브러리의 `Object`에 정의된 메서드로 각각 해당 객체의 클래스와 싱글턴 클래스를 반환합니다.
 
@@ -102,7 +102,7 @@ basic_class_instance_b.singleton_class
 
 싱글턴 클래스는 또한 조상 목록에서도 확인할 수 있습니다.
 
-{% highlight ruby %}
+```ruby
 basic_class_instance_a.singleton_class.superclass
 => BasicClass
 
@@ -111,14 +111,14 @@ basic_class_instance_a.class.ancestors
 
 basic_class_instance_a.singleton_class.ancestors
 => [#<Class:#<BasicClass:0x007fb5a2002760>>, BasicClass, Object, Kernel, BasicObject]
-{% endhighlight %}
+```
 
 여기서 `#<Class:#<BasicClass:0x007fb5a2002760>>`가 실제로 `BasicClass`인 것을 확인할 수 있습니다.
 
-{% highlight ruby %}
+```ruby
 basic_class_instance_a.singleton_class.new
 TypeError: can't create instance of singleton class
-{% endhighlight %}
+```
 
 그리고 싱글턴 클래스에서 인스턴스를 만들려 하면 루비에서 에러를 냅니다.
 
@@ -126,7 +126,7 @@ TypeError: can't create instance of singleton class
 
 `method`를 사용해서 싱글턴 클래스를 살펴볼 수도 있습니다.
 
-{% highlight ruby %}
+```ruby
 basic_class_instance_a.method(:basic_class_instance_method)
 => #<Method: BasicClass#basic_class_instance_method>
 
@@ -135,7 +135,7 @@ basic_class_instance_a.method(:singleton_method_of_a)
 
 basic_class_instance_a.singleton_methods
 => [:singleton_method_of_a]
-{% endhighlight %}
+```
 
 `basic_class_instance_method`는 `BasicClass`에 정의되어 있고, `singleton_method_of_a`는 `#<BasicClass:0x007fb5a2002760>`에 정의되어 있다고 나옵니다. 표기법이 살짝 다른 것도 확인할 수 있습니다. 싱글턴 클래스에는 `#`가 앞에 붙어있고, 메서드 표시에는 `#` 대신 `.`가 사용됩니다.
 
@@ -150,7 +150,7 @@ basic_class_instance_a.singleton_methods
 
 코드를 통해서 확인해 봅시다. 
 
-{% highlight ruby %}
+```ruby
 class BasicClass
   def self.basic_class_class_method_a
   end
@@ -160,11 +160,11 @@ class BasicClass
 end
 
 basic_class_instance_a = BasicClass.new
-{% endhighlight %}
+```
 
 `BasicClass`를 새로 정의해 보았습니다. 보시다시피 `basic_class_class_method_a`라는 클래스 메서드를 가지고 있습니다. 메서드를 몇 개 호출해서 상태를 살펴봅시다.
 
-{% highlight ruby %}
+```ruby
 BasicClass.class
 => Class
 
@@ -173,7 +173,7 @@ BasicClass.singleton_class
 
 BasicClass.singleton_methods
 => [:basic_class_class_method_a]
-{% endhighlight %}
+```
 
 이 결과를 해석하면 다음과 같은 사실을 알 수 있습니다.
 
@@ -183,7 +183,7 @@ BasicClass.singleton_methods
 
 새로운 싱글턴 메서드를 정의하고, 클래스 메서드를 호출하듯이 호출해봅시다.
 
-{% highlight ruby %}
+```ruby
 BasicClass.define_singleton_method(:basic_class_class_method_b) do
   return "I am :basic_class_class_method_b!"
 end
@@ -193,14 +193,14 @@ BasicClass.basic_class_class_method_b
 
 BasicClass.singleton_methods
 => [:basic_class_class_method_a, :basic_class_class_method_b]
-{% endhighlight %}
+```
 
 이를 통해서 루비의 클래서 메서드는 클래스의 싱글턴 메서드를 특별히 일컫는 이름이라는 것을 재차 확인할 수 있습니다.
 
 아직 이해하기 조금 어려울 수도 있습니다. 중요한 것은 클래스도 그냥 평범한 객체라고 생각하는 것입니다. 클래스는 다른 객체를 만들수 있다는 특별한 기능을 가지고 있기는 하지만 여전히 평범한 객체일 뿐입니다. 다른 객체와 일반적인 특성을 공유하며, 싱글턴 클래스와 싱글턴 메서드를 가지고 있다는 것은 모든 루비 객체가 일반적으로 가지는 특성 중 일부입니다. 이를 이해한다면 루비에서 클래스 메서드를 구현한 방식이 그렇게 이상하게 느껴지지는 않을 것입니다. 
 
 ## Level 6: 클래스 메서드의 메서드 디스패치 시스템
-{% highlight ruby %}
+```ruby
 module BasicModule 
   def self.basic_module_module_method_a
   end
@@ -227,13 +227,13 @@ class BasicClass < SuperClass
 end
 
 basic_class_instance_a = BasicClass.new
-{% endhighlight %}
+```
 
 `BasicModule`, `SuperClass`, `BasicClass`를 정의했는데 `BasicClass`는 `SuperClass`로부터 상속받고 `BasicModule`을 `include`합니다. 
 
 `BasicClass`와 싱글턴 클래스의 조상 목록을 살펴봅시다.
 
-{% highlight ruby %}
+```ruby
 BasicClass.ancestors
 => [BasicClass, BasicModule, SuperClass, Object, Kernel, BasicObject]
 
@@ -243,7 +243,7 @@ BasicClass.singleton_class.ancestors
  
 BasicClass.singleton_class.class
 => Class
-{% endhighlight %}
+```
 
 `BasicClass`의 조상 목록은 예상했던 대로입니다. 싱글턴 클래스의 조상 목록은 더 흥미롭습니다. 여기서 다음 사실을 관찰할 수 있습니다.
 
@@ -264,7 +264,7 @@ BasicClass.singleton_class.class
 
 ### 인스턴스 메서드와 클래스 메서드는 같은 메서드를 다르게 부르는 것 뿐이다
 
-{% highlight ruby %}
+```ruby
 # 첫 번째 쌍
 BasicClass.instance_methods
 => [:basic_class_instance_method_a, :basic_module_instance_method_a, :super_class_instance_method_a, ...]
@@ -278,7 +278,7 @@ BasicClass.singleton_class.instance_methods
 
 BasicClass.methods
 => [:basic_class_class_method_a, :super_class_class_method_a, ...]
-{% endhighlight %}
+```
 
 인스턴스 메서드와 클래스 메서드는 동일한 메서드를 다른 관점에서 본 것입니다.
 
@@ -293,7 +293,7 @@ BasicClass.methods
 ### 싱글턴 클래스에 접근하는 다른 방법
 일반적으로 싱글턴 클래스를 다루는 방법은 세 가지가 있습니다.
 
-{% highlight ruby %}
+```ruby
 class BasicClass
 end
 
@@ -325,7 +325,7 @@ basic_class_instance_a.extend(BasicModule)
 
 basic_class_instance_a.singleton_methods
 => [:singleton_method_a, :singleton_method_b, :singleton_method_c]
-{% endhighlight %}
+```
 
 첫 번째 방식은 루비 코어 `Object`에 정의된 `define_singleton_method`를 호출합니다.
 

@@ -14,7 +14,7 @@ So google told me that it means JSON Web Token (JWT). In a nutshell, it's a JSON
 
 The data to put in JWT looks like this:
 
-{% highlight js %}
+```js
 { // headerJSON
   "alg": "HS256", // algorithm used for signature
   "typ": "JWT" // type of token
@@ -25,23 +25,23 @@ The data to put in JWT looks like this:
   "name": "Leonardo DiCaprio", // custom keyword
   "canWinOscar": true // custom keyword
 }
-{% endhighlight %}
+```
 
 Here's the process to create a JWT:
 
-{% highlight js %}
+```js
 header = base64_encode(headerJSON)
 payload = base64_encode(payloadJSON);
 signature = base64_encode(HMAC_SHA256(header + "." + payload, secret))
 jwt = header + "." + payload + "." + signature
-{% endhighlight %}
+```
 
 Which will result in:
-{% highlight js %}
+```js
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
 eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MzAwfQ.
 WlYm_cYdqaTioKJ4bvSqElSmymKLJQLTYIwSnhnomm4
-{% endhighlight %}
+```
 
 Here are some helpful posts to understand what it is and how to use it: [verbose introduction](https://jwt.io/introduction/), [less verbose introduction](https://stormpath.com/blog/jwt-the-right-way), [do not use JWT for sessions](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/), [do not use JWT for sessions - now with flowchart!](http://cryto.net/~joepie91/blog/2016/06/19/stop-using-jwt-for-sessions-part-2-why-your-solution-doesnt-work/), [discussion on the previous article](https://news.ycombinator.com/item?id=11895440). So what is it good for?
 

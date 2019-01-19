@@ -4,7 +4,7 @@ title: Thoughts on Safer Smart Contracts Through Type-Driven Development
 
 ## Introduction
 
-Last year, I learned of the Idris language and wrote a [blog post](https://harfangk.github.io/2017/10/24/tdd-with-idris-review.html) after reading a book on it. Coincidentally, I joined a company that worked on blockchain technology almost immediately after publishing that post. So when I came across a paper titled ["Safer smart contracts through type-driven development: Using dependent and polymorphic types for safer development of smart contracts"](https://publications.lib.chalmers.se/records/fulltext/234939/234939.pdf), which combined two topics of my interest, I just had to read it.
+Last year, I learned of the Idris language and wrote a [blog post](./2017-10-23-tdd-with-idris-review.html) after reading a book on it. Coincidentally, I joined a company that worked on blockchain technology almost immediately after publishing that post. So when I came across a paper titled ["Safer smart contracts through type-driven development: Using dependent and polymorphic types for safer development of smart contracts"](https://publications.lib.chalmers.se/records/fulltext/234939/234939.pdf), which combined two topics of my interest, I just had to read it.
 
 This post is a collection of the thoughts that came across my mind while I was reading the paper. There won't be any new idea that builds on the contents of the paper. I assume basic understanding of functional programming paradigm, in particular the distinction between pure functions and side effects.
 

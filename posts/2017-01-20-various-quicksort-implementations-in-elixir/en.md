@@ -16,7 +16,7 @@ There's little practical value in implementing quicksort with linked list. Just 
 
 There is an Erlang example provided by Joe Armstrong himself in Programming Erlang. Here is its Elixir equivalent.
 
-{% highlight elixir %}
+```elixir
 defmodule Quicksort do
   def quicksort_naive([]), do: []
   def quicksort_naive([pivot|t]) do
@@ -25,7 +25,7 @@ defmodule Quicksort do
     quicksort_naive(for x <- t, x >= pivot, do: x)
   end
 end
-{% endhighlight %}
+```
 
 It's a succint implementation that does its job. Unfortunately, it uses the head of the list as its pivot, which would always lead to the worst case performance of quicksort O(n^2) for already sorted lists.
 
@@ -33,7 +33,7 @@ It's a succint implementation that does its job. Unfortunately, it uses the head
 
 This problem can be mitigated by taking a random element in the list as the pivot. 
 
-{% highlight elixir %}
+```elixir
 defmodule Quicksort do
   def quicksort_random([]), do: []
   def quicksort_random(list) do
@@ -59,7 +59,7 @@ defmodule Quicksort do
   defp random_position_in(list) when length(list) > 1, do: :rand.uniform(length(list)) - 1
   defp random_position_in(_), do: 0
 end
-{% endhighlight %}
+```
 
 Not so succint this time. The problems inherent in linked list start to appear. 
 
@@ -73,7 +73,7 @@ I could have written an alternative implementation by using `Enum.random/1` to i
 
 Quicksort is most efficient when it uses the true median of the list as its pivot, but it's costly to calculate the true median. Sedgewick recommends using a median of three elements of the list as a pivot for a highly efficient approximation of the true median. This enables better and more stable performance than when using a random pivot.
 
-{% highlight elixir %}
+```elixir
 defmodule Quicksort do
   def quicksort_median([]), do: []
   def quicksort_median(list) do
@@ -107,7 +107,7 @@ defmodule Quicksort do
     Enum.find_index(list, fn(x) -> x == median end)
   end
 end
-{% endhighlight %}
+```
 
 This is almost identical to the previous solution, except that I defined `index_of_median_of_three_random_elements_from/1`. It uses `Enum.take_random/2`, which traverses the given list to randomly pick three elements from it. Sedgewick recommends simply using first, last, and middle elements of the array, but I think random choice would be good enough.
 
@@ -115,7 +115,7 @@ This is almost identical to the previous solution, except that I defined `index_
 
 First proposed by [Yaroslavskiy's paper](http://codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf) in 2009, dual pivot quicksort has been found to be faster than single pivot quicksort. Its carefully optimized variant is implemented in Java 7 Array class. 
 
-{% highlight elixir %}
+```elixir
 defmodule Quicksort do
   def quicksort_dual_pivot([]), do: []
   def quicksort_dual_pivot([h]), do: [h]
@@ -144,7 +144,7 @@ defmodule Quicksort do
   defp random_position_in(list) when length(list) > 1, do: :rand.uniform(length(list)) - 1
   defp random_position_in(_), do: 0
 end
-{% endhighlight %}
+```
 
 Whereas single pivot quicksort gets more efficient the closer the pivot is to the true median, that strategy is suboptimal for dual pivot quicksort. My unverified intuition is that dual pivot quicksort operates most efficiently when each pivot is located around 33% and 66% percentile of the list. 
 

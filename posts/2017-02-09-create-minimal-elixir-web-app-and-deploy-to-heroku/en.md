@@ -18,7 +18,7 @@ In this post, we will create a simple application that converts datetime between
 
 Run `mix new timeconverter --sup` from your shell to create a new Elixir app with built-in supervision tree. 
 
-{% highlight bash %}
+```bash
 $ mix new timeconverter --sup
 * creating README.md
 * creating .gitignore
@@ -39,13 +39,13 @@ You can use "mix" to compile it, test it, and more:
     mix test
 
 Run "mix help" for more commands.
-{% endhighlight %}
+```
 
 ## Add HTTP Server
 
 We will set up Cowboy and Plug. Open `mix.exs` and add dependencies. 
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Mixfile do
   ...
   defp deps do
@@ -55,13 +55,13 @@ defmodule Timeconverter.Mixfile do
     ]
   end
 end
-{% endhighlight %}
+```
 
 Then run `mix deps.get` to fetch necessary dependencies.
 
 After that, we will create `Timeconverter.Router` module that will serve as the HTTP interface of the application. Create `router.ex` in `lib/timeconverter` directory. Copy the following code into the newly created file.
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Router do
   use Plug.Router
   
@@ -82,7 +82,7 @@ defmodule Timeconverter.Router do
     {:ok, _} = Plug.Adapters.Cowboy.http(Timeconverter.Router, [])
   end
 end
-{% endhighlight %}
+```
 
 `Plug.Router` provides a set of macros to generate routes that respond to HTTP reqeusts. When you use that module, `match` and `dispatch` plugs are required by default.
 
@@ -94,7 +94,7 @@ Check the documentation for `Plug.Router` from [here](https://hexdocs.pm/plug/Pl
 
 Next we will include `Timeconverter.Router` under the application's supervision tree so that it will be run when the application runs. Open `lib/timeconverter/application.ex` and add `Timeconverter.Router` as a worker.
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Application do
   ...
   def start(_type, _args) do
@@ -107,7 +107,7 @@ defmodule Timeconverter.Application do
     ...
   end
 end
-{% endhighlight %}
+```
 
 Now `Cowboy` HTTP server will also run when our application runs.
 
@@ -119,7 +119,7 @@ Since this post is about building a minimal web app and deploying it, we will no
 
 Replace the contents of `lib/timeconverter.ex` with the following code. Remember that this sample code is also provided on github. 
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter do
   @moduledoc """
   Documentation for Timeconverter.
@@ -150,11 +150,11 @@ defmodule Timeconverter do
     end
   end
 end
-{% endhighlight %}
+```
 
 Nothing interesting here - just some Regex and DateTime functions. Let's look at how we connect the HTTP routes with domain logic. Open `lib/timeconverter/router.ex` and change the route functions.
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Router do
   ...
   get "/" do
@@ -170,7 +170,7 @@ defmodule Timeconverter.Router do
   end
   ...
 end
-{% endhighlight %}
+```
 
 `Plug.Conn` could be understood as the representation of HTTP requests and responses. All useful information about a single HTTP connection is stored in one `Plug.Conn` struct and can be accessed from there. 
 
@@ -186,19 +186,19 @@ We need buildpacks to deploy to Heroku. Although Elixir is not officially suppor
 
 But we need to make a few preparations before deploying. First create `elixir_buildpack.config` file in the application's root directory and type the following configurations. 
 
-{% highlight bash %}
+```bash
 # Erlang version
 erlang_version=19.2
 
 # Elixir version
 elixir_version=1.4.1
-{% endhighlight %}
+```
 
 As of February 2017 the buildpack uses Elixir 1.3 when no Elixir version is specified. Since we're using Elixir 1.4, the build causes error if we don't specify the Elixir version we'd like to use.
 
 Now open `lib/timeconverter/router.ex` file to set up port configuration for Heroku. 
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Router do
   ...
   def start_link do
@@ -214,7 +214,7 @@ defmodule Timeconverter.Router do
     end
   end
 end
-{% endhighlight %}
+```
 
 Heroku assigns a port through environment variable PORT. We need to get that port number through `System.get_env("PORT")` so that our application can run on Heroku. `if` clause in `get_port/0` is there to provide port number when we would like to run our application locally.
 

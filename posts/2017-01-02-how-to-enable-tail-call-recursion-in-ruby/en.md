@@ -38,7 +38,7 @@ TCO is neither required nor prohibited in Ruby. Some implementations, including 
 
 ## Factorial code
 
-{% highlight ruby %}
+```ruby
 class Fact
   def self.iterator(n)
     (1..n).reduce(:*)
@@ -54,13 +54,13 @@ class Fact
     tail_recursive(n - 1, acc * n)
   end
 end 
-{% endhighlight %}
+```
 
 We will use factorial to test tail recursion. We have three versions - iterator, tail-recursive, and non-tail-recursive. 
 
 Let's try running them.
 
-{% highlight ruby %}
+```ruby
 puts 'Iterator result'
 => Iterator result
 puts Fact.iterator(100000).to_f
@@ -75,22 +75,22 @@ puts 'Tail-recursive result'
 => Tail-recursive result
 puts Fact.tail_recursive(100000).to_f
 => fact.rb:11:in `tail_recursive': stack level too deep (SystemStackError) `
-{% endhighlight %}
+```
 
 Only the iterator version works. Both recursive versions give `SystemStackError`. Let's try it again with TCO enabled. 
 
 ## How to enable TCO in Ruby
 
-{% highlight ruby %}
+```ruby
 RubyVM::InstructionSequence.compile_option = {
   :tailcall_optimization => true,
   :trace_instruction => false
 }
-{% endhighlight %}
+```
 
 You can set the `compile_option` in `RubyVM::InstructionSequence` to enable TCO. That looks simple but there's a complication here. Change to `RubyVM` happens at runtime, so you can't make it work by just including those lines to the file. There are two ways to make it work. 
 
-{% highlight ruby %}
+```ruby
 RubyVM::InstructionSequence.compile_option = {
   :tailcall_optimization => true,
   :trace_instruction => false
@@ -113,11 +113,11 @@ class Fact
     end
   END
 end 
-{% endhighlight %}
+```
 
 This is the first option. You use `eval` to evaluate the method definition at runtime, overriding the method definition that was parsed at compile time.
 
-{% highlight ruby %}
+```ruby
 # fact.rb
 class Fact
   def self.iterator(n)
@@ -142,13 +142,13 @@ RubyVM::InstructionSequence.compile_option = {
 }
 
 require_relative 'fact.rb'
-{% endhighlight %}
+```
 
 This is the second option. TCO is enabled in `ruby_vm_option.rb`, enabling TCO in all subsequently loaded files including `fact.rb`.
 
 Let's try running it again with TCO.
 
-{% highlight ruby %}
+```ruby
 puts 'Iterator result'
 => Iterator result
 puts Fact.iterator(100000).to_f
@@ -163,7 +163,7 @@ puts 'Tail-recursive result'
 => Tail-recursive result
 puts Fact.tail_recursive(100000).to_f
 => Infinity
-{% endhighlight %}
+```
 
 This time the tail-recursive one works, too. But the non-tail-recursive one still gives `SystemStackError`.
 

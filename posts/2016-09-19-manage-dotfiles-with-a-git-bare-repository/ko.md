@@ -14,12 +14,12 @@ title: Bare Git Repository 사용해서 설정파일 관리하기
 
 깃만 있으면 되고, 명령 네 줄만 입력하면 끝납니다.
 
-{% highlight bash %}
+``` bash
 git init --bare $HOME/.dotfiles.git
 echo 'alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"' >> $HOME/.zshrc
 source ~/.zshrc
 dotfiles config --local status.showUntrackedFiles no
-{% endhighlight %}
+```
 
 1. `~/.dotfiles.git` 에 bare git repository 를 생성하고
 2. 쉘 설정 파일에 앨리어싱 설정을 넣어줍니다. 저는 zsh 를 사용해서 `.zshrc` 지만 bash 사용자는 `.bashrc` 겠죠? --git-dir 와 --work-tree 패스를 눈여겨보세요. 
@@ -28,26 +28,26 @@ dotfiles config --local status.showUntrackedFiles no
 
 이제 홈 디렉토리에서 앨리어싱 해둔 커맨드를 사용해서 파일을 관리하고, 필요하면 리모트 리포를 설정해서 사용하면 됩니다.
 
-{% highlight bash %}
+``` bash
 dotfiles status
 dotfiles add .vimrc
 dotfiles commit -m "Add vimrc"
 dotfiles remote add origin https://www.github.com/username/repo.git
 dotfiles push origin master
-{% endhighlight %}
+```
 
 ### 다른 시스템에 닷파일 가져오기
 
 리모트 리포에서 파일을 가져오기 전에 쉘 커맨드 두 줄만 입력하면 됩니다.
 
-{% highlight bash %}
+``` bash
 echo 'alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME"' >> $HOME/.zshrc
 source ~/.zshrc
 echo ".dotfiles.git" >> .gitignore
 git clone --bare https://www.github.com/username/repo.git $HOME/.dotfiles.git
 dotfiles checkout
 dotfiles config --local status.showUntrackedFiles no
-{% endhighlight %}
+```
 
 1. Git bare repository 가 문제없이 동작하도록 앨리어스를 설정해줍니다.
 2. 설정 파일 적용을 위해 리로드.

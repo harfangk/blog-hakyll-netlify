@@ -18,7 +18,7 @@ title: 플러그와 카우보이만 사용해서 미니멀한 엘릭서 웹 앱�
 
 먼저 쉘에서 `mix new timeconverter --sup`을 실행해서 수퍼비전 트리를 내장한 새 엘릭서 앱을 만듭니다.
 
-{% highlight bash %}
+```bash
 $ mix new timeconverter --sup
 * creating README.md
 * creating .gitignore
@@ -39,13 +39,13 @@ You can use "mix" to compile it, test it, and more:
     mix test
 
 Run "mix help" for more commands.
-{% endhighlight %}
+```
 
 ## HTTP 서버 추가하기
 
 카우보이와 플러그를 설치합니다. `mix.exs`를 열어서 해당 패키지를 추가해주세요.
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Mixfile do
   ...
   defp deps do
@@ -55,13 +55,13 @@ defmodule Timeconverter.Mixfile do
     ]
   end
  end
-{% endhighlight %}
+```
 
 그리고 `mix deps.get`을 실행해서 필요한 패키지를 설치합니다.
 
 이어서 앱의 HTTP 인터페이스 기능을 수행할 `Timeconverter.Router` 모듈을 생성합니다. `router.ex` 파일을 `lib/timeconverter` 디렉토리 안에 생성한 뒤에 다음 코드를 입력해 주세요.
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Router do
   use Plug.Router
   
@@ -82,7 +82,7 @@ defmodule Timeconverter.Router do
     {:ok, _} = Plug.Adapters.Cowboy.http(Timeconverter.Router, [])
   end
 end
-{% endhighlight %}
+```
 
 `Plug.Router`는 HTTP 요청에 응답하는 경로를 생성할 수 있는 매크로를 제공합니다. `match`와 `dispatch`는 `Plug.Router`를 사용할 때 반드시 넣어야 하는 플러그들입니다. 
 
@@ -94,7 +94,7 @@ end
 
 앱이 실행되면 `Timeconverter.Router`도 자동으로 실행되도록 어플리케이션 수퍼비전 트리에 넣어줍니다. `lib/timeconverter/application.ex`를 열고 `Timeconverter.Router` 워커를 추가합니다.
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Application do
   ...
   def start(_type, _args) do
@@ -107,7 +107,7 @@ defmodule Timeconverter.Application do
     ...
   end
 end
-{% endhighlight %}
+```
 
 이제 Timeconverter 앱이 실행되면 카우보이 HTTP 서버도 실행될 것입니다.
 
@@ -119,7 +119,7 @@ end
 
 `lib/timeconverter.ex` 파일의 내용을 다음 코드로 대체해 주세요. 글 서두에 적었듯이 이 코드는 깃헙에서도 제공하고 있습니다.
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter do
   @moduledoc """
   Documentation for Timeconverter.
@@ -150,11 +150,11 @@ defmodule Timeconverter do
     end
   end
 end
-{% endhighlight %}
+```
 
 Regex와 DateTime 모듈의 함수를 사용하는 별로 특별할 것 없는 코드입니다. 이제 HTTP 경로와 도메인 로직을 연결해봅시다. `lib/timeconverter/router.ex` 파일을 열고 경로 관련 함수를 변경해주세요.
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Router do
   ...
   get "/" do
@@ -170,7 +170,7 @@ defmodule Timeconverter.Router do
   end
   ...
 end
-{% endhighlight %}
+```
 
 `Plug.Conn`은 HTTP 요청과 응답을 나타낸다고 보면 됩니다. 각 `Plug.Conn` 스트럭트에는 하나의 HTTP 연결에 관련된 모든 유용한 정보가 포함되어 있으며 필요에 따라 그 정보를 사용할 수 있습니다.
 
@@ -186,19 +186,19 @@ end
 
 배포하기 전에 몇 가지 더 준비할 것이 있습니다. 먼저 앱의 루트 디렉토리에 `elixir_buildpack.config` 파일을 생성하고, 다음 설정을 입력해주세요.
 
-{% highlight bash %}
+```bash
 # Erlang version
 erlang_version=19.2
 
 # Elixir version
 elixir_version=1.4.1
-{% endhighlight %}
+```
 
 엘릭서 버전을 명시하지 않을 경우 빌드팩에서는 2017년 2월 시점에서 엘릭서 1.3 버전을 기본적으로 사용합니다. 우리 앱은 엘릭서 1.4를 사용하고 있으므로 엘릭서 버전을 빌드팩에 명시해줘야 합니다. 그렇지 않으면 빌드에 실패합니다.
 
 이어서 `lib/timeconverter/router.ex` 파일을 열고 허로쿠용 포트 설정을 추가해주세요.
 
-{% highlight elixir %}
+```elixir
 defmodule Timeconverter.Router do
   ...
   def start_link do
@@ -214,7 +214,7 @@ defmodule Timeconverter.Router do
     end
   end
 end
-{% endhighlight %}
+```
 
 허로쿠는 환경 변수 PORT를 통해서 앱이 사용할 포트를 지정해줍니다. `System.get_env("PORT")` 함수를 사용해서 지정된 포트 값을 받아와야 앱을 허로쿠에서 실행할 수 있습니다. `get_port/0`의 `if`문은 PORT 환경 변수가 없는 로컬 환경에서 앱을 실행할 때에도 포트 넘버가 지정되도록 해줍니다.
 

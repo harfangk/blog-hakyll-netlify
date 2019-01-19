@@ -72,7 +72,7 @@ Plus, it's still possible to teach advanced concepts like monad or macro later i
 
 Elixir also provides a few niceties that make learning easier. For example, its pipe operator allows writing  function composition from left to right, not the other way. That's much more intuitive for people who use human languages that are written left to right. I also like its pipe operator, which completely mirrors the eye movement when reading code.
 
-{% highlight elixir %}
+```elixir
 foo(bar(baz(new_function(other_function()))))
 
 other_function() |> new_function() |> baz() |> bar() |> foo()
@@ -82,7 +82,7 @@ other_function()
 |> baz() 
 |> bar() 
 |> foo()
-{% endhighlight %}
+```
 
 Its dynamic type system also helps in this respect, because it allows students to start writing codes without having to know all the types in Elixir and their perks. Static type system is not that bad if it has good inference system, but dynamic type system is still easier.
 

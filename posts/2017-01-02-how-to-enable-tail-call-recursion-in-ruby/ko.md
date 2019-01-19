@@ -36,7 +36,7 @@ TCO는 루비 언어에서 금지된 것은 아니지만 그렇다고 필수적�
 
 ## 팩토리얼
 
-{% highlight ruby %}
+```ruby
 class Fact
   def self.iterator(n)
     (1..n).reduce(:*)
@@ -52,13 +52,13 @@ class Fact
     tail_recursive(n - 1, acc * n)
   end
 end 
-{% endhighlight %}
+```
 
 팩토리얼을 사용해서 꼬리 재귀 최적화를 실험해 봅시다. 세 가지 버전을 준비했습니다. 이터레이터를 쓰는 메서드, 꼬리 재귀 메서드, 그리고 꼬리 재귀가 아닌 재귀 메서드입니다.
 
 실행해보도록 하지요.
 
-{% highlight ruby %}
+```ruby
 puts 'Iterator result'
 => Iterator result
 puts Fact.iterator(100000).to_f
@@ -73,22 +73,22 @@ puts 'Tail-recursive result'
 => Tail-recursive result
 puts Fact.tail_recursive(100000).to_f
 => fact.rb:11:in `tail_recursive': stack level too deep (SystemStackError) `
-{% endhighlight %}
+```
 
 이터레이터 메서드만 동작하고, 두 재귀 메서드에서는 `SystemStackError`가 발생합니다. TCO를 작동시키고 다시 실행해 봅시다. 
 
 ## 루비에서 TCO를 작동시키는 방법
 
-{% highlight ruby %}
+```ruby
 RubyVM::InstructionSequence.compile_option = {
   :tailcall_optimization => true,
   :trace_instruction => false
 }
-{% endhighlight %}
+```
 
 `RubyVM::InstructionSequence`의 `compile_option`에서 TCO가 작동하도록 설정할 수 있습니다. 매우 간단해 보이지만 한 가지 문제가 있는데, `RubyVM`에 대한 변경점은 런타임에 적용되기 때문에 `compile_option` 변경 코드를 파일에 그냥 추가하는 것 만으로는 작동하지 않습니다. 이를 해결하는 방법은 두 가지가 있습니다.
 
-{% highlight ruby %}
+```ruby
 RubyVM::InstructionSequence.compile_option = {
   :tailcall_optimization => true,
   :trace_instruction => false
@@ -111,11 +111,11 @@ class Fact
     end
   END
 end 
-{% endhighlight %}
+```
 
 이게 첫 번째 방법입니다. 컴파일 타임에 이미 파싱된 메서드 정의를 오버라이드하기 위해서  `eval`을 사용해서 메서드 정의를 런타임에 다시 정의합니다. 
 
-{% highlight ruby %}
+```ruby
 # fact.rb
 class Fact
   def self.iterator(n)
@@ -140,13 +140,13 @@ RubyVM::InstructionSequence.compile_option = {
 }
 
 require_relative 'fact.rb'
-{% endhighlight %}
+```
 
 이게 두 번째 방법입니다. `ruby_vm_option.rb`에서 컴파일 옵션이 변경되었기 때문에 `fact.rb`를 비롯하여 이후에 파싱된 코드에는 TCO가 적용됩니다.
 
 TCO를 적용해서 다시 실행해 봅시다.
 
-{% highlight ruby %}
+```ruby
 puts 'Iterator result'
 => Iterator result
 puts Fact.iterator(100000).to_f
@@ -161,7 +161,7 @@ puts 'Tail-recursive result'
 => Tail-recursive result
 puts Fact.tail_recursive(100000).to_f
 => Infinity
-{% endhighlight %}
+```
 
 이번에는 꼬리 재귀 메서드가 동작하는 것을 볼 수 있습니다. 하지만 꼬리 재귀가 아닌 재귀 메서드에서는 여전히 `SystemStackError`가 발생합니다. 
 

@@ -31,7 +31,7 @@ To summarize in a list:
 
 We'll first look at the simplest construction typically seen in Ruby to go over the foundation. This part will be the longest in this post, because we'll go over basic concepts and tools we'll use.
 
-{% highlight ruby %}
+```ruby
 class BasicClass
   def basic_class_method
   end
@@ -39,17 +39,17 @@ end
 
 basic_class_instance = BasicClass.new
 => #<BasicClass:0x007fedd2261138>
-{% endhighlight %}
+```
 
 We defined `BasicClass` with an instance method `basic_class_method`, then created a new instance of `BasicClass` called `basic_class_instance`.
 
-{% highlight ruby %}
+```ruby
 basic_class_instance.class
 => BasicClass
 
 BasicClass.class
 => Class
-{% endhighlight %}
+```
 
 `class` method is defined in `Class` in Ruby standard library. When called on an object, it returns the class of the object. As you can see, `basic_class_instance` is an instance of `BasicClass`. Nothing surprising here. 
 
@@ -57,7 +57,7 @@ But it's more interesting to see that `BasicClass` is an instance of `Class`. Ev
 
 In Ruby, everything is an object, which can mean a lot of different things. But for this particular aspect, let's just think about how an object is constructed. In most OOP languages, an object is constructed as an instance of a class. But everything, including class, is an object in Ruby. So a class that you defined is constructed as an instance of a class called `Class`. If this concept is new to you, take some time to think about it. There's a bit of recursive thinking here.
 
-{% highlight ruby %}
+```ruby
 BasicClass.ancestors
 => [BasicClass, Object, Kernel, BasicObject]
 
@@ -66,7 +66,7 @@ BasicClass.class.ancestors
 
 BasicClass.instance_method(:basic_class_method)
 => #<UnboundMethod: BasicClass#basic_class_method>
-{% endhighlight %}
+```
 
 `ancestors` method is defined in `Module` class of Ruby standard library. It shows the ancestors of a class or a module.
 
@@ -76,10 +76,10 @@ BasicClass.instance_method(:basic_class_method)
 
 `Class` has some special capabilities that `Module` does not, for example constructing an object. A discussion about `Class` and `Module` warrants a separate post, so I won't talk about it here. Let's move to the next tool.
 
-{% highlight ruby %}
+```ruby
 BasicClass.instance_method(:basic_class_method)
 => #<UnboundMethod: BasicClass#basic_class_method>
-{% endhighlight %}
+```
 
 `instance_method` is defined in `Module`, which returns an `UnboundMethod` that represents the instance method given in its arguments. In our specific case, it means that `basic_class_method` is an `UnboundMethod` that is defined in `BasicClass` under the name of `basic_class_method`. The last part might seem redundant, but it's useful when dealing with aliased methods.
 
@@ -89,7 +89,7 @@ We will just use `instance_method` to see where the instance method is defined i
 
 In this part we will look at another typical structure: superclass and subclass. We'll just use the tools we introduced in the previous part to analyze the structure without introducing new concepts.
 
-{% highlight ruby %}
+```ruby
 class SuperClass
   def super_class_method
   end
@@ -99,23 +99,23 @@ class BasicClass < SuperClass
   def basic_class_method
   end
 end
-{% endhighlight %}
+```
 
 We created a new `SuperClass`, and had `BasicClass` inherit from it. Let's look at their ancestors.
 
-{% highlight ruby %}
+```ruby
 BasicClass.ancestors
 => [BasicClass, SuperClass, Object, Kernel, BasicObject]
 
 SuperClass.ancestors
 => [SuperClass, Object, Kernel, BasicObject]
-{% endhighlight %}
+```
 
 `BasicClass` has another ancestor called `SuperClass`. Nothing unexpected here.
 
 Let's look at `instance_method` next.
 
-{% highlight ruby %}
+```ruby
 SuperClass.instance_method(:super_class_method)
 => #<UnboundMethod: SuperClass#super_class_method>
 
@@ -127,7 +127,7 @@ NameError: undefined method `basic_class_method' for class `SuperClass'
 
 BasicClass.instance_method(:super_class_method)
 => #<UnboundMethod: BasicClass(SuperClass)#super_class_method>
-{% endhighlight %}
+```
 
 There's nothing notable in the first three cases. `SuperClass` has `super_class_method`, `BasicClass` has `basic_class_method`, and `SuperClass` does not have `basic_class_method`. 
 
@@ -139,7 +139,7 @@ In terms of method dispatch system, it means that Ruby interpreter traversed up 
 
 In Ruby, module mixin is used alongside class inheritance to organize data and functions and provide namespace. When a module is mixed in, its constants, methods, and module variables are appended to the receiving module. Let's see how module mixin is represented in ancestors hierarchy.
 
-{% highlight ruby %}
+```ruby
 module ModuleIncludedToBasicClass
   def method_included_to_basic_class
   end
@@ -203,13 +203,13 @@ class BasicClass < SuperClass
     super
   end
 end
-{% endhighlight %}
+```
 
 There are four new modules: `ModuleIncludedToBasicClass`, `ModulePrependedToBasicClass`,  `ModuleIncludedToSuperClass`, `ModulePrependedToSuperClass`. Their names should reveal their responsibilities clearly. There is also an instance method `defined_in` defined in every module and class. It prints where it is defined and then calls `super` to call a method with the same name defined higher up in the ancestors hierarchy.
 
 There are two ways to mixin module, which are both defined in `Module` in standard Ruby library. `include` is the traditional method, and `prepend` was introduced in Ruby 2.0. Their differences are easier to understand by looking at the ancestors hierarchy.
 
-{% highlight ruby %}
+```ruby
 BasicClass.ancestors
 => [ModulePrependedToBasicClass, BasicClass, ModuleIncludedToBasicClass, 
 ModulePrependedToSuperClass, SuperClass, ModuleIncludedToSuperClass, 
@@ -218,11 +218,11 @@ Object, Kernel, BasicObject]
 SuperClass.ancestors
 => [ModulePrependedToSuperClass, SuperClass, ModuleIncludedToSuperClass, 
 Object, Kernel, BasicObject]
-{% endhighlight %}
+```
 
 As you can see, `prepend` puts the prepended module before the receiving module, whereas `include` puts the included module after the receiving module. This has implications in overriding methods and `super` calls.
 
-{% highlight ruby %}
+```ruby
 basic_class_instance = BasicClass.new
 => #<BasicClass:0x007fbf9b2527b0>
 basic_class_instance.defined_in
@@ -233,19 +233,19 @@ This method is defined in ModulePrependedToSuperClass
 This method is defined in SuperClass
 This method is defined in ModuleIncludedToSuperClass
 NoMethodError: super: no superclass method `defined_in' for #<BasicClass:0x007fbf9b2527b0>
-{% endhighlight %}
+```
 
 You can see that the order of method call follows the ancestor hierarchy. The `NoMethodError` at the end occurs because there's no `defined_in` method in `Object`.
 
 A valuable insight here is that module mixin is just another way of implementing inheritance and not something magical. It is, however, a very easy to use way to implement multiple inheritance.
 
-{% highlight ruby %}
+```ruby
 BasicClass.instance_method(:method_included_to_super_class)
 => #<UnboundMethod: BasicClass(ModuleIncludedToSuperClass)#method_included_to_super_class>
 
 BasicClass.instance_method(:method_prepended_to_basic_class)
 => #<UnboundMethod: BasicClass(ModulePrependedToBasicClass)#method_prepended_to_basic_class>
-{% endhighlight %}
+```
 
 Calling `instance_method` tells us where the instance methods available to `BasicClass` are actually defined. There's nothing unexpected here.
 
