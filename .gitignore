@@ -3,6 +3,7 @@
 
 _cache/*
 _site/*
+.sass-cache/*
 
 ### Emacs ###
 # -*- mode: gitignore; -*-
