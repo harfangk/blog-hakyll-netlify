@@ -22,21 +22,13 @@ postLinkUrl :: FilePath -> FilePath
 postLinkUrl path =
   "" </> takeBaseName path </> takeDirectory path <.> "html"
 
-postLinkText :: String -> String
-postLinkText lang =
+languageName :: String -> String
+languageName lang =
   case lang of
     "en" -> "English"
     "ko" -> "한국어"
     "de" -> "Deutsch"
     _ -> "Unknown Language"
-
-postsHeader :: String -> String
-postsHeader lang =
-  case lang of
-    "en" -> "Posts"
-    "ko" -> "글 목록"
-    "de" -> "Posts"
-    _ -> "Posts"
 
 aboutLinkUrl :: String -> String
 aboutLinkUrl lang =
@@ -50,14 +42,14 @@ aboutLinkText lang =
     "de" -> "About"
     _ -> "About"
 
-homeLinkUrl :: String -> String
-homeLinkUrl lang =
+postsLinkUrl :: String -> String
+postsLinkUrl lang =
   "/" ++ lang ++ "/index.html"
 
-homeLinkText :: String -> String
-homeLinkText lang =
+postsLinkText :: String -> String
+postsLinkText lang =
   case lang of
-    "en" -> "Home"
-    "ko" -> "홈"
-    "de" -> "Home"
+    "en" -> "Posts"
+    "ko" -> "글 목록"
+    "de" -> "Posts"
     _ -> "Home"

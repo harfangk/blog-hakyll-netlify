@@ -5,35 +5,34 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>$title$</title>
-    <link rel="stylesheet" href="/css/default.css" />
+    <link rel="stylesheet" href="/main.css" />
   </head>
   <body>
-    <header>
-      <h1>Harfang's Perch</h1>
-      <nav>
-        <ul>
-          <li>
-            <a href="$homeLinkUrl$">$homeLinkText$</a>
-          </li>
-          <li>
-            <a href="$aboutLinkUrl$">$aboutLinkText$</a>
-          </li>
-          <li>
-            <ul>
-              $for(langs)$
-              <li>
-                <a href="$langUrl$">$langName$</a>
-              </li>
-              $endfor$
-            </ul>
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <div class="wrapper">
+      <header class="site-header">
+        <h1>Harfang's Perch</h1>
+        <nav>
+          <ul class="navigation-menu">
+            <li>
+              <a href="$postsLinkUrl$">$postsLinkText$</a>
+            </li>
+            <li>
+              <a href="$aboutLinkUrl$">$aboutLinkText$</a>
+            </li>
+          </ul>
+          <ul class="language-menu">
+            $for(langs)$
+            <li>
+              <a href="$langUrl$">$langName$</a>
+            </li>
+            $endfor$
+          </ul>
+        </nav>
+      </header>
 
-    <main role="main">
-      $body$
-    </main>
-
+      <main role="main">
+        $body$
+      </main>
+    </div>
   </body>
 </html>

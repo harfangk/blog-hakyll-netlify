@@ -1,27 +1,14 @@
-<section>
-  <header>
-    <h1>$postsHeader$</h1>
-  </header>
-  <section>
-    <ul>
-      $for(posts)$
-      <article>
-        <header>
-          <h2>$title$</h2>
-          <time datetime="$date$" itemprop="datePublished">$date$</time>
-        </header>
-        <section>
-          <p>
-            $if(teaser)$
-              $teaser$
-            $else$
-              No teaser
-            $endif$
-          </p>
-        </section>
-        <a href="$url$">Read more</a>
-      </article>
-      $endfor$
-    </ul>
-  </section>
+<section class="page-content">
+  <ul>
+    $for(posts)$
+    <article>
+      <header>
+        <h2>$title$</h2>
+        <time datetime="$date$" itemprop="datePublished">$date$</time>
+      </header>
+      <section>$teaser$</section>
+      <a href="$url$">Read more</a>
+    </article>
+    $endfor$
+  </ul>
 </section>

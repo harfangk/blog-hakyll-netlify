@@ -15,9 +15,9 @@ main = hakyll $ do
         route   idRoute
         compile copyFileCompiler
 
-    match "css/*" $ do
-        route   idRoute
-        compile compressCssCompiler
+    match "css/main.scss" $ do
+        route   $ constRoute "main.css"
+        compile compressScssCompiler
 
     match "templates/*" $ compile templateBodyCompiler
 
@@ -59,19 +59,29 @@ indexRules lang =
             >>= loadAndApplyTemplate "templates/default.html" (headerCtx lang)
             >>= relativizeUrls
 
+compressScssCompiler :: Compiler (Item String)
+compressScssCompiler = do
+  fmap (fmap compressCss) $
+    getResourceString
+    >>= withItemBody (unixFilter "sass" [ "-s"
+                                        , "--scss"
+                                        , "--style", "compressed"
+                                        , "--load-path", "css"
+                                        ])
+
 -- Contexts
 
 indexCtx :: String -> [ Item String ] -> Context String
 indexCtx lang posts =
     listField "posts" postsCtx (return posts) `mappend`
-    constField "postsHeader" (postsHeader lang) `mappend`
+    constField "postsHeader" (languageName lang) `mappend`
     defaultContext
 
 headerCtx :: String -> Context String
 headerCtx lang =
-    listField "langs" (i18nCtx indexLinkUrl indexLinkText) (return . emptyLanguageItems $ supportedLangs) `mappend`
-    constField "homeLinkText" (homeLinkText lang) `mappend`
-    constField "homeLinkUrl" (homeLinkUrl lang) `mappend`
+    listField "langs" (i18nCtx indexLinkUrl languageName) (return . emptyLanguageItems $ supportedLangs) `mappend`
+    constField "postsLinkText" (postsLinkText lang) `mappend`
+    constField "postsLinkUrl" (postsLinkUrl lang) `mappend`
     constField "aboutLinkText" (aboutLinkText lang) `mappend`
     constField "aboutLinkUrl" (aboutLinkUrl lang) `mappend`
     constField "title" "Harfang's Perch" `mappend`
@@ -79,7 +89,7 @@ headerCtx lang =
 
 postCtx :: Compiler [ Item String ] -> Context String
 postCtx i18nUrls =
-    listField "i18nUrls" (i18nCtx postLinkUrl postLinkText) i18nUrls `mappend`
+    listField "i18nUrls" (i18nCtx postLinkUrl languageName) i18nUrls `mappend`
     dateField "date" "%F" `mappend`
     defaultContext
 
