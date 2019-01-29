@@ -117,12 +117,6 @@ p {
   padding: vr(0.2) 0;
 }
 
-article {
-  ul, ol {
-    padding-left: vr(1);
-  }
-}
-
 // Headings
 h1 {
   font-size: 2rem;
@@ -156,7 +150,9 @@ pre {
   font-family: monospace, monospace;
   overflow-x: auto;
   border-left: 6px solid #eee;
-  background-color: #FDF6E3
+  background-color: #FDF6E3;
+  margin: vr(0.5) 0;
+  padding-left: vr(0.3);
 
   code {
     border: none;
@@ -191,9 +187,10 @@ pre {
 }
 
 main {
-  padding: vr(2);
+  padding: vr(2) vr(3);
   @include wide {
-    max-width: calc(100vw - 14rem);
+    min-width: calc(#{$tablet-width} - 14rem);
+    max-width: calc(100vw - 55rem);
   }
 }
 
@@ -322,21 +319,34 @@ main {
   list-style: none;
 
   .post-teaser {
-    margin-top: vr(1.5);
+    padding: vr(0.7) 0;
     &:first-child {
       margin-top: 0;
     }
-    article {
-      section {
-        margin-top: vr(0.5);
-      }
+    section {
+      margin-top: vr(0.5);
+    }
+    ul, ol {
+      padding-left: vr(1);
     }
   }
 }
 
 // Post
-.post-title {
-}
-
-.post-content {
+.post {
+  header {
+    ul, ol {
+      list-style: none;
+      display: flex;
+      li {
+        margin-right: vr(0.5);
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  section {
+    margin-top: vr(0.5);
+  }
 }

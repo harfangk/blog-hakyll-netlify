@@ -20,7 +20,7 @@ indexLinkText lang =
 
 postLinkUrl :: FilePath -> FilePath
 postLinkUrl path =
-  "" </> takeBaseName path </> takeDirectory path <.> "html"
+  takeBaseName path </> takeDirectory path <.> "html"
 
 languageName :: String -> String
 languageName lang =

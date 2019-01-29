@@ -102,7 +102,7 @@ postsCtx lang =
 
 i18nCtx :: (FilePath -> FilePath) -> (String -> String) -> Context String
 i18nCtx urlTransformer textTransformer =
-    (field "langUrl" $ \item -> return . urlTransformer . toFilePath . itemIdentifier $ item ) `mappend`
+    (field "langUrl" $ \item -> return $ "/" ++ (urlTransformer . toFilePath . itemIdentifier $ item )) `mappend`
     (field "langName" $ \item -> return . textTransformer . takeBaseName . toFilePath . itemIdentifier $ item)
 
 -- Routes
