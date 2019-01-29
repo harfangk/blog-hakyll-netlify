@@ -1,14 +1,18 @@
 <section class="page-content">
-  <ul>
+  <ul class="post-teasers">
     $for(posts)$
-    <article>
-      <header>
-        <h2>$title$</h2>
-        <time datetime="$date$" itemprop="datePublished">$date$</time>
-      </header>
-      <section>$teaser$</section>
-      <a href="$url$">Read more</a>
-    </article>
+    <li class="post-teaser">
+      <article>
+        <header>
+          <h1><a href="$url$">$title$</a></h1>
+          <time datetime="$date$" itemprop="datePublished">$date$</time>
+        </header>
+        <section>$teaser$</section>
+        <footer>
+          <a href="$url$">$readMoreLinkText$</a>
+        </footer>
+      </article>
+    </li>
     $endfor$
   </ul>
 </section>

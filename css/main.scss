@@ -81,20 +81,11 @@ strong {
   font-weight: bold;
 }
 
-time {
-  font-style: italic;
-  color: #aaa;
-}
 
 // Images
 img {
   max-width: 100%;
   vertical-align: middle;
-}
-
-// Lists
-ul, ol {
-  list-style: none;
 }
 
 // Links
@@ -119,6 +110,16 @@ blockquote {
 
   > :last-child {
     margin-bottom: 0;
+  }
+}
+
+p {
+  padding: vr(0.2) 0;
+}
+
+article {
+  ul, ol {
+    padding-left: vr(1);
   }
 }
 
@@ -218,11 +219,14 @@ main {
     color: $header-color;
   }
 
+  ul, ol {
+    list-style: none;
+  }
+
   h1 {
     color: $header-color;
     font-weight: bold;
     line-height: vr(1.5);
-    text-align: center;
   }
 
   @include mobile {
@@ -272,6 +276,9 @@ main {
     padding: vr(1.5);
     nav {
       margin-top: vr(1);
+      h1 {
+        text-align: center;
+      }
       li {
         margin-top: vr(0.2);
       }
@@ -311,6 +318,23 @@ main {
 }
 
 // Posts
+.post-teasers {
+  list-style: none;
+
+  .post-teaser {
+    margin-top: vr(1.5);
+    &:first-child {
+      margin-top: 0;
+    }
+    article {
+      section {
+        margin-top: vr(0.5);
+      }
+    }
+  }
+}
+
+// Post
 .post-title {
 }
 

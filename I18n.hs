@@ -53,3 +53,11 @@ postsLinkText lang =
     "ko" -> "글 목록"
     "de" -> "Posts"
     _ -> "Home"
+
+readMoreLinkText :: String -> String
+readMoreLinkText lang =
+  case lang of
+    "en" -> "Continue reading"
+    "ko" -> "전체 보기"
+    "de" -> "Weiter lesen"
+    _ -> "Home"

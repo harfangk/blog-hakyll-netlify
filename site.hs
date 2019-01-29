@@ -73,7 +73,7 @@ compressScssCompiler = do
 
 indexCtx :: String -> [ Item String ] -> Context String
 indexCtx lang posts =
-    listField "posts" postsCtx (return posts) `mappend`
+    listField "posts" (postsCtx lang) (return posts) `mappend`
     constField "postsHeader" (languageName lang) `mappend`
     defaultContext
 
@@ -93,10 +93,11 @@ postCtx i18nUrls =
     dateField "date" "%F" `mappend`
     defaultContext
 
-postsCtx :: Context String
-postsCtx =
+postsCtx :: String -> Context String
+postsCtx lang =
     teaserField "teaser" "content" `mappend`
     dateField "date" "%F" `mappend`
+    constField "readMoreLinkText" (readMoreLinkText lang) `mappend`
     defaultContext
 
 i18nCtx :: (FilePath -> FilePath) -> (String -> String) -> Context String
