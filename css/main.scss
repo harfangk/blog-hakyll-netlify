@@ -1,5 +1,5 @@
 @charset "utf-8";
-@import url(https://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700');
 
 // Variables
 $base-font-family: "Nanum Gothic", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -36,7 +36,7 @@ $tablet-width: 60rem;
 }
 
 @function vr($multiple) {
-  @return 1.6 * $multiple * 1rem;
+  @return 1.7 * $multiple * 1rem;
 }
 
 // Reset some basic elements
@@ -46,6 +46,8 @@ p, blockquote, pre, hr,
 dl, dd, ol, ul, figure {
   margin: 0;
   padding: 0;
+  word-break: keep-all;
+  word-wrap: break-word;
 }
 
 // Main elements
@@ -55,7 +57,6 @@ dl, dd, ol, ul, figure {
   margin: 0;
   box-sizing: border-box;
   font-weight: normal;
-  text-align: justify;
   text-size-adjust: none;
 }
 
@@ -68,12 +69,12 @@ body {
   font-kerning: normal;
 
   @include mobile {
-    --base-line-height: 1.6;
-    line-height: 1.6;
+    --base-line-height: 1.7;
+    line-height: 1.7;
   }
   @include wide {
-    --base-line-height: 1.6;
-    line-height: 1.6;
+    --base-line-height: 1.7;
+    line-height: 1.7;
   }
 }
 
@@ -113,37 +114,41 @@ blockquote {
   }
 }
 
+hr {
+  margin: vr(1) 0;
+}
+
 p {
-  padding: vr(0.2) 0;
+  padding: vr(0.3) 0;
 }
 
 // Headings
 h1 {
   font-size: 2rem;
-  line-height: vr(2);
-
   color: $heading-color;
+  padding-top: vr(0.5);
+  font-weight: bold;
+  a {
+    font-weight: bold;
+  }
 }
 
 h2 {
   font-size: 1.8rem;
-  line-height: 3.6rem;
-
   color: $heading-color;
+  padding-top: vr(0.5);
 }
 
 h3 {
   font-size: 1.5rem;
-  line-height: 3.6rem;
-
   color: $heading-color;
+  padding-top: vr(0.5);
 }
 
 // Code formatting
 code {
   font-family: PT Sans, Calibri, Arial, sans;
-  color: #4D4E53;
-  line-height: 1.5;
+  background-color: #FDF6E3;
 }
 
 pre {
@@ -156,6 +161,10 @@ pre {
 
   code {
     border: none;
+    background-color: none;
+    a {
+      color: $text-color;
+    }
   }
 }
 
@@ -189,7 +198,7 @@ pre {
 main {
   padding: vr(2) vr(3);
   @include wide {
-    min-width: calc(#{$tablet-width} - 14rem);
+    min-width: calc(#{$tablet-width} - 15rem);
     max-width: calc(100vw - 55rem);
   }
 }
@@ -261,57 +270,26 @@ main {
 
   @include wide {
     position: fixed;
-    max-width: 14rem;
-    order: 2;
+    max-width: 15rem;
     top: 0;
     right: 0;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    text-align: right;
     padding: vr(1.5);
     nav {
-      margin-top: vr(1);
-      h1 {
-        text-align: center;
-      }
       li {
         margin-top: vr(0.2);
       }
-      .posts {
-        li {
-          margin-left: vr(0.5);
-          font-size: 0.7rem;
-        }
+      .navigation-menu {
+        padding: vr(0.3) 0;
       }
       .language-menu {
-        margin-top: vr(1);
+        padding-top: vr(0.3);
       }
     }
   }
-}
-
-// Page content
-.page-content {
-}
-
-.page-heading {
-  text-align: center;
-}
-
-.post-list {
-  margin-left: 0;
-  list-style: none;
-  max-width: 35em;
-}
-
-.post-meta {
-  color: $grey-color;
-}
-
-.post-link {
-  display: block;
 }
 
 // Posts
@@ -319,15 +297,20 @@ main {
   list-style: none;
 
   .post-teaser {
-    padding: vr(0.7) 0;
+    padding: vr(0.5) 0;
     &:first-child {
       margin-top: 0;
+    }
+    header {
+      h1 {
+        padding: 0;
+      }
     }
     section {
       margin-top: vr(0.5);
     }
     ul, ol {
-      padding-left: vr(1);
+      padding-left: vr(0.7);
     }
   }
 }
@@ -335,6 +318,9 @@ main {
 // Post
 .post {
   header {
+    h1 {
+      padding: 0;
+    }
     ul, ol {
       list-style: none;
       display: flex;
@@ -348,5 +334,8 @@ main {
   }
   section {
     margin-top: vr(0.5);
+    ul, ol {
+      padding-left: vr(0.7);
+    }
   }
 }
