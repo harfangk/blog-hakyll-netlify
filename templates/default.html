@@ -8,31 +8,29 @@
     <link rel="stylesheet" href="/main.css" />
   </head>
   <body>
-    <div class="wrapper">
-      <header class="site-header">
-        <h1>Harfang's Perch</h1>
-        <nav>
-          <ul class="navigation-menu">
-            <li>
-              <a href="$postsLinkUrl$">$postsLinkText$</a>
-            </li>
-            <li>
-              <a href="$aboutLinkUrl$">$aboutLinkText$</a>
-            </li>
-          </ul>
-          <ul class="language-menu">
-            $for(langs)$
-            <li>
-              <a href="$langUrl$">$langName$</a>
-            </li>
-            $endfor$
-          </ul>
-        </nav>
-      </header>
+    <header class="site-header">
+      <h1>Harfang's Perch</h1>
+      <nav>
+        <ul class="navigation-menu">
+          <li>
+            <a href="$postsLinkUrl$">$postsLinkText$</a>
+          </li>
+          <li>
+            <a href="$aboutLinkUrl$">$aboutLinkText$</a>
+          </li>
+        </ul>
+        <ul class="language-menu">
+          $for(langs)$
+          <li>
+            <a href="$langUrl$">$langName$</a>
+          </li>
+          $endfor$
+        </ul>
+      </nav>
+    </header>
 
-      <main role="main">
-        $body$
-      </main>
-    </div>
+    <main role="main">
+      $body$
+    </main>
   </body>
 </html>

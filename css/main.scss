@@ -5,8 +5,6 @@
 // Variables
 $base-font-family: "Nanum Gothic", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-$spacing-unit: 2rem;
-
 $text-color:       #333;
 $background-color: #f5f3ee;
 $brand-color:      #550000;
@@ -30,10 +28,6 @@ $tablet-width: 60rem;
   @media screen and (max-width: $tablet-width) {
     @content;
   }
-}
-
-@function rvr($multiple) {
-  @return calc(var(--baseline) * $multiple * 1rem);
 }
 
 @function vr($multiple) {
@@ -103,16 +97,10 @@ a {
 
 // Blockquotes
 blockquote {
-  color: $grey-color;
-  border-left: 4px solid $grey-color-light;
-  padding-left: $spacing-unit / 2;
+  border-left: 4px solid $grey-color;
+  padding-left: vr(0.7);
   font-size: 18px;
-  letter-spacing: -1px;
   font-style: italic;
-
-  > :last-child {
-    margin-bottom: 0;
-  }
 }
 
 hr {
@@ -191,10 +179,6 @@ pre {
 .sourceCode .re { }
 // ErrorTok
 .sourceCode .er { color: #D30102; font-weight: bold; }
-
-// Wrapper
-.wrapper {
-}
 
 main {
   padding: vr(2) vr(3);
