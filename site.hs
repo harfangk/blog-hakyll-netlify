@@ -75,6 +75,7 @@ indexCtx :: String -> [ Item String ] -> Context String
 indexCtx lang posts =
     listField "posts" (postsCtx lang) (return posts) `mappend`
     constField "postsHeader" (languageName lang) `mappend`
+    constField "title" "Harfang's Perch" `mappend`
     defaultContext
 
 headerCtx :: String -> Context String
