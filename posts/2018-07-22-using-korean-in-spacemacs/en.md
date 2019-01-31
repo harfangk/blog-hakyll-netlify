@@ -2,8 +2,6 @@
 title: Using Korean in Spacemacs
 ---
 
-## Using Korean in Spacemacs
-
 I've started trying out Emacs because I lost patience while trying to set up Haskell development environment in Vim. Some random person on the Internet suggested Spacemacs as an alternative, so I decided to give it a try. So far I'm liking it - it works out of box without much configuration. Unfortunately the documentation on setting up Korean language environment was a bit outdated and/or fragmented for an Emacs newbie like me to easily understand. After some researching I've come up with a working configuration so I'll share it here. I'm using `D2Coding` font, but feel free to use whatever you like.
 
 I'm using Ubuntu 16.04.4 and Emacs 26.1.

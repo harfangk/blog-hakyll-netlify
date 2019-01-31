@@ -13,7 +13,7 @@ npm install --global elm elm-live
 elm-live src/Main.elm --open -- --output=elm.js
 ```
 
-# Individual Ports
+## Individual Ports
 
 This approach defines a port function for each interaction between Elm and JavaScript. Since ports are always one-way, if data goes back and forth, that requires a pair of ports. Here's a sample implementation. The entire code can be found in `individual-ports` branch.
 
@@ -157,7 +157,7 @@ In this implementation the `Main` module has to know about specific constructors
 
 Moreover, the two port functions have the most generic type signatures, `Json.Encode.Value`, in order to be so flexible. This cripples compile time type safety for them. There will still be no runtime crash thanks to how JSON decoding works in Elm, but this does increase the chance of logic bugs at runtime. And it also means that you'll have to write and maintain that decoder, which is one of the less pleasant aspects of Elm.
 
-# So When to Use Which?
+## So When to Use Which?
 
 The first question to ask is how large your Elm-JavaScript interoperation would be. If it's not going to be much, individual ports approach is simpler and more intuitive to implement.
 

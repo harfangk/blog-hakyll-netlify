@@ -2,7 +2,7 @@
 title: My Favorite Ruby Rogues Episodes - Book Club Series 
 ---
 
-As I taught myself to program, Ruby Rogues podcast has been invaluably helpful to me. Books and blog posts could teach me specific technological knowledge, but they couldn't provide me a broader perspective about programming. Ruby Rogues podcast filled that gap. Charles Max Wood, the host of the show, and panelists and guests have my deepest gratitude. You can read the separate post that I wrote about Ruby Rogues [here](https://harfangk.github.io/2016/10/30/thank-you-ruby-rogues.html).
+As I taught myself to program, Ruby Rogues podcast has been invaluably helpful to me. Books and blog posts could teach me specific technological knowledge, but they couldn't provide me a broader perspective about programming. Ruby Rogues podcast filled that gap. Charles Max Wood, the host of the show, and panelists and guests have my deepest gratitude. You can read the separate post that I wrote about Ruby Rogues [here](2016-10-31-thank-you-ruby-rogues.html).
 
 When I first started writing this blog post, I wanted to pick my favorite episodes out of the 300 Ruby Rogues episodes. But as I went through the list of episodes, I realized that I liked almost all of them. They all taught me something.
 
