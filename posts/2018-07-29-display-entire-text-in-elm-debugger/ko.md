@@ -6,11 +6,11 @@ title: 엘름 디버거에서 전체 텍스트 표시하기
 
 <!--more-->
 
-![Default Debugger]({{ site.baseurl }}/assets/debugger_vanilla.png "Default Debugger")
+![Default Debugger](/images/debugger_vanilla.png "Default Debugger")
 
 말줄임표를 보는 것도 지겨워져서 전체 문자열을 표시할 방법을 연구하기 시작했고 어느 정도 성과를 거두었습니다. 이제 전체 메시지를 볼 수 있습니다.
 
-![Debugger Without Truncation]({{ site.baseurl }}/assets/debugger_full_text.png "Debugger Without Truncation")
+![Debugger Without Truncation](/images/debugger_full_text.png "Debugger Without Truncation")
 
 `elm-stuff/packages/elm-lang/virtual-dom/2.0.4/src/Native/Debugger.js` 파일에 있는 `messageToString` 함수를 아래 코드로 갈아치운 결과입니다.
 
@@ -104,7 +104,7 @@ function messageToStringHelper(value)
 
 엘름 디버거에서 `30ch`로 고정된 사이드바 너비도 꽤나 걸리적거립니다. `elm-stuff/packages/elm-lang/virtual-dom/2.0.4/src/VirtualDom/Debug.elm` 파일에 있는 코드를 수정하면 됩니다.
 
-![Debugger With Wider Sidebar]({{ site.baseurl }}/assets/debugger_modified_sidebar.png "Debugger With Wider Sidebar")
+![Debugger With Wider Sidebar](/images/debugger_modified_sidebar.png "Debugger With Wider Sidebar")
 
 ```css
 #values {

@@ -6,11 +6,11 @@ Elm Debugger is one of the most amazing debugging tools I've ever used - too bad
 
 <!--more-->
 
-![Default Debugger]({{ site.baseurl }}/assets/debugger_vanilla.png "Default Debugger")
+![Default Debugger](/images/debugger_vanilla.png "Default Debugger")
 
 Those ellipses in the Debugger have annoyed me enough for me to come up with a way to get rid of them, and I was moderately successful. Here's how the messages look like now:
 
-![Debugger Without Truncation]({{ site.baseurl }}/assets/debugger_full_text.png "Debugger Without Truncation")
+![Debugger Without Truncation](/images/debugger_full_text.png "Debugger Without Truncation")
 
 I did it by overwriting the `messageToString` function in `elm-stuff/packages/elm-lang/virtual-dom/2.0.4/src/Native/Debugger.js`. Here's the replacement code:
 
@@ -104,7 +104,7 @@ function messageToStringHelper(value)
 
 Elm Debugger has another annoying default setting - the fixed width of `30ch` on its sidebar. You can override it by editing `elm-stuff/packages/elm-lang/virtual-dom/2.0.4/src/VirtualDom/Debug.elm`:
 
-![Debugger With Wider Sidebar]({{ site.baseurl }}/assets/debugger_modified_sidebar.png "Debugger With Wider Sidebar")
+![Debugger With Wider Sidebar](/images/debugger_modified_sidebar.png "Debugger With Wider Sidebar")
 
 ```css
 #values {

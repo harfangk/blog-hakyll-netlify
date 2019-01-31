@@ -62,7 +62,7 @@ title: How to Bake Pi 리뷰
 
 또한 "[범주론은] 객체를 어떤 문맥에 놓고 살펴볼 지 결정하기 위한 방법으로 객체와 객체의 특성 자체를 살펴보기 보다는, 결정하기 위해서 객체가 다른 객체와 어떻게 관련되어 있는지를 강조합니다." 무슨 뜻인지는 그림으로 보는 편이 더 이해하기 편할 것입니다.
 
-![relationship example]({{ site.baseurl }}/assets/relationship_example.png)
+![relationship example](/images/relationship_example.png)
 
 그림에 나온 관계인 `f`, `g`, `h` 등이야말로 범주론의 주요 연구 대상이라는 말입니다. 이러한 관계를 범주론에서는 사상(morphism) 또는 간단히 화살표(arrow)라고 부르는데, 함수를 표시하는 방법과 유사해 보인다고 생각할 수도 있습니다. 실제로 함수는 사상의 종류 중 하나이며 함수와 사상의 표기법도 어느 정도 유사합니다.
 
@@ -76,7 +76,7 @@ title: How to Bake Pi 리뷰
 
 이어서 저자는 범주론에서는 사상의 형태에 따라서 만들어지는 구조도 연구한다고 설명합니다. 서로 다른 종류의 객체임에도 불구하고, 객체끼리의 관계가 나타내는 구조를 그림으로 표현해보면 매우 유사한 경우가 있습니다. 책에서 제시한 예시 중 세 가지를 보여드리겠습니다. 모듈로 2에서의 덧셈, 1과 -1의 곱셈, 그리고 도형의 회전입니다.
 
-![addition modulo 2]({{ site.baseurl }}/assets/addition_modulo_2.png) ![multiplication of 1 and -1]({{ site.baseurl }}/assets/multiplication_1_minus_1.png) ![rotation by degrees]({{ site.baseurl }}/assets/rotation_by_degrees.png)
+![addition modulo 2](/images/addition_modulo_2.png) ![multiplication of 1 and -1](/images/multiplication_1_minus_1.png) ![rotation by degrees](/images/rotation_by_degrees.png)
 
 책의 최후반부에서는 동일함(sameness)이나 보편적 특성(universal properties)에 대해서 다루는데, 문맥에 따라서 의미가 달라지는 이러한 개념들을 범주론에서 어떻게 연구하는지 간략히 보여줍니다.
 

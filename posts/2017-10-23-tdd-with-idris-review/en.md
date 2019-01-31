@@ -145,7 +145,7 @@ xor True y = not y
 
 Something that starts with `?`, in this case `?xor_rhs`, `?xor_rhs_1`, and `?xor_rhs_2`, is a hole. It stands in for incomplete parts of the program, and Idris REPL provides amazing commands to work with holes. The instructions in the above code refer to some basic commands, such as automatic case splitting or displaying which type the hole stands for. In the following gif, you can see me actually following these instructions. Working in Idris REPL is an incredibly pleasant experience. It feels like having a meticulous and helpful assistant, not a nagging manager.
 
-![terminal gif]({{ site.baseurl }}/assets/idris_repl_demo.gif)
+![terminal gif](/images/idris_repl_demo.gif)
 
 ## Other Musings
 

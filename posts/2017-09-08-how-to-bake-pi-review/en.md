@@ -60,7 +60,7 @@ In the chapter about context, she writes that "category theory seeks to emphasiz
 
 She also writes that "Instead of just studying objects and their characteristics by themselves, [category theory] emphasizes their relationships with other objects as the main way of placing them in context." This is easier to understand with a diagram.
 
-![relationship example]({{ site.baseurl }}/assets/relationship_example.png)
+![relationship example](/images/relationship_example.png)
 
 So the relationships like `f`, `g`, `h` are important subject of study in category theory. If you think these relationships, called "morphism" or "arrow" in category theory, look similar to functions, then you are not wrong. Function is a kind of morphism and its mathematical notation bears some similarities to that of morphism.
 
@@ -74,7 +74,7 @@ Morphisms of a cateogry for some objects should obey the following rules:
 
 In the following chapter, she talks about how category theory studies structures arising out of morphisms. There are different objects whose relationships have very similar structures when laid out in diagrams. Here are three of the examples presented in the book: addition modulo 2, multplication of 1 and -1, and rotation by degrees.
 
-![addition modulo 2]({{ site.baseurl }}/assets/addition_modulo_2.png) ![multiplication of 1 and -1]({{ site.baseurl }}/assets/multiplication_1_minus_1.png) ![rotation by degrees]({{ site.baseurl }}/assets/rotation_by_degrees.png)
+![addition modulo 2](/images/addition_modulo_2.png) ![multiplication of 1 and -1](/images/multiplication_1_minus_1.png) ![rotation by degrees](/images/rotation_by_degrees.png)
 
 The last few chapters discuss a few more topics of interest such as sameness or universal properties. They revolve around demonstrating how category theory studies these concepts, which have different meanings depending on the contexts under which they are examined.
 

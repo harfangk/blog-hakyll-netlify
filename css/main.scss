@@ -100,7 +100,6 @@ a {
 blockquote {
   border-left: 4px solid $grey-color;
   padding-left: vr(0.7);
-  font-size: 18px;
   font-style: italic;
 }
 
@@ -110,6 +109,14 @@ hr {
 
 p {
   padding: vr(0.3) 0;
+}
+
+figure > img {
+  display: block;
+}
+
+figcaption {
+  font-size: 0.8rem;
 }
 
 // Headings
