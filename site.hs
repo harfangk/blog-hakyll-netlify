@@ -49,7 +49,7 @@ main = hakyll $ do
     paginateKo <- buildPaginateWith postsGrouper (postsPattern "ko") (postsPageId "ko")
     indexRules "ko" paginateKo
 
-    create ["rss_en.xml"] $ do
+    create ["en/rss.xml"] $ do
         route idRoute
         compile $ do
             posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/en.md" "content"
@@ -57,7 +57,7 @@ main = hakyll $ do
                   postCtx Nothing `mappend`
                   bodyField "description"
             renderRss feedConfiguration feedCtx posts
-    create ["rss_ko.xml"] $ do
+    create ["ko/rss.xml"] $ do
         route idRoute
         compile $ do
             posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/ko.md" "content"
@@ -65,7 +65,7 @@ main = hakyll $ do
                   postCtx Nothing `mappend`
                   bodyField "description"
             renderRss feedConfiguration feedCtx posts
-    create ["atom_en.xml"] $ do
+    create ["en/atom.xml"] $ do
         route idRoute
         compile $ do
             posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/en.md" "content"
@@ -73,7 +73,7 @@ main = hakyll $ do
                   postCtx Nothing `mappend`
                   bodyField "description"
             renderAtom feedConfiguration feedCtx posts
-    create ["atom_ko.xml"] $ do
+    create ["ko/atom.xml"] $ do
         route idRoute
         compile $ do
             posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/ko.md" "content"
@@ -139,6 +139,8 @@ defaultCtx lang =
     constField "postsLinkUrl" (postsLinkUrl lang) `mappend`
     constField "aboutLinkText" (aboutLinkText lang) `mappend`
     constField "aboutLinkUrl" (aboutLinkUrl lang) `mappend`
+    constField "atomFeedUrl" (atomFeedUrl lang) `mappend`
+    constField "rssFeedUrl" (rssFeedUrl lang) `mappend`
     constField "htmlLang" lang <>
     constField "title" "Harfang's Perch" `mappend`
     defaultContext

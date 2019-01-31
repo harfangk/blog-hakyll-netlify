@@ -61,3 +61,11 @@ readMoreLinkText lang =
     "ko" -> "전체 보기"
     "de" -> "Weiter lesen"
     _ -> "Home"
+
+rssFeedUrl :: String -> String
+rssFeedUrl lang =
+  "/" ++ lang ++ "/rss.xml"
+
+atomFeedUrl :: String -> String
+atomFeedUrl lang =
+  "/" ++ lang ++ "/atom.xml"
