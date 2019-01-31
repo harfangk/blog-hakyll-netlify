@@ -26,7 +26,7 @@ main = hakyll $ do
           currentPath <- getResourceFilePath
           let lang = takeBaseName currentPath
           pandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" (headerCtx lang)
+            >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
             >>= relativizeUrls
 
     match "posts/**" $ do
@@ -39,7 +39,7 @@ main = hakyll $ do
           pandocCompiler
             >>= saveSnapshot "content"
             >>= loadAndApplyTemplate "templates/post.html" (postCtx (return i18nItems))
-            >>= loadAndApplyTemplate "templates/default.html" (headerCtx lang)
+            >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
             >>= relativizeUrls
 
     paginateEn <- buildPaginateWith postsGrouper (postsPattern "en") (postsPageId "en")
@@ -58,7 +58,7 @@ indexRules lang paginate =
           posts <- recentFirst =<< loadAll pattern
           makeItem ""
               >>= loadAndApplyTemplate "templates/index.html" (indexCtx paginate pageNumber lang posts)
-              >>= loadAndApplyTemplate "templates/default.html" (headerCtx lang)
+              >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
               >>= relativizeUrls
 
 compressScssCompiler :: Compiler (Item String)
@@ -81,16 +81,6 @@ indexCtx paginate pageNumber lang posts =
     paginateContext paginate pageNumber `mappend`
     defaultContext
 
-headerCtx :: String -> Context String
-headerCtx lang =
-    listField "langs" (i18nCtx indexLinkUrl languageName) (return . emptyLanguageItems $ supportedLangs) `mappend`
-    constField "postsLinkText" (postsLinkText lang) `mappend`
-    constField "postsLinkUrl" (postsLinkUrl lang) `mappend`
-    constField "aboutLinkText" (aboutLinkText lang) `mappend`
-    constField "aboutLinkUrl" (aboutLinkUrl lang) `mappend`
-    constField "title" "Harfang's Perch" `mappend`
-    defaultContext
-
 postCtx :: Compiler [ Item String ] -> Context String
 postCtx i18nUrls =
     listField "i18nUrls" (i18nCtx postLinkUrl languageName) i18nUrls `mappend`
@@ -102,6 +92,17 @@ postsCtx lang =
     teaserField "teaser" "content" `mappend`
     dateField "date" "%F" `mappend`
     constField "readMoreLinkText" (readMoreLinkText lang) `mappend`
+    defaultContext
+
+defaultCtx :: String -> Context String
+defaultCtx lang =
+    listField "langs" (i18nCtx indexLinkUrl languageName) (return . emptyLanguageItems $ supportedLangs) `mappend`
+    constField "postsLinkText" (postsLinkText lang) `mappend`
+    constField "postsLinkUrl" (postsLinkUrl lang) `mappend`
+    constField "aboutLinkText" (aboutLinkText lang) `mappend`
+    constField "aboutLinkUrl" (aboutLinkUrl lang) `mappend`
+    constField "htmlLang" lang <>
+    constField "title" "Harfang's Perch" `mappend`
     defaultContext
 
 i18nCtx :: (FilePath -> FilePath) -> (String -> String) -> Context String
