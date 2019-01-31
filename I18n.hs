@@ -8,7 +8,7 @@ supportedLangs =
 
 indexLinkUrl :: String -> FilePath
 indexLinkUrl lang =
-  "/" ++ lang ++ "/index.html"
+  lang ++ "/index.html"
 
 indexLinkText :: String -> String
 indexLinkText lang =
