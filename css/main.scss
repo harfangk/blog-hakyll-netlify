@@ -281,21 +281,37 @@ main {
 }
 
 // Posts
-.post-teasers {
-  list-style: none;
+.posts {
+  .post-teasers {
+    list-style: none;
 
-  .post-teaser {
-    padding: vr(0.5) 0;
-    &:first-child {
-      margin-top: 0;
-    }
-    header {
-      h1 {
-        padding: 0;
+    .post-teaser {
+      padding: vr(0.5) 0;
+      &:first-child {
+        margin-top: 0;
+      }
+      header {
+        h1 {
+          padding: 0;
+        }
+      }
+      ul, ol {
+        padding-left: vr(0.7);
       }
     }
-    ul, ol {
-      padding-left: vr(0.7);
+  }
+  > footer {
+    display: flex;
+    justify-content: center;
+    a {
+      padding: 0 vr(0.2);
+      margin: 0 vr(0.2);
+      &.active {
+        text-decoration: underline;
+        font-weight: bold;
+      }
+    }
+    a.active {
     }
   }
 }
