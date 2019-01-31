@@ -38,7 +38,7 @@ main = hakyll $ do
           let i18nItems = emptyLanguageItems paths
           pandocCompiler
             >>= saveSnapshot "content"
-            >>= loadAndApplyTemplate "templates/post.html" (postCtx (return i18nItems))
+            >>= loadAndApplyTemplate "templates/post.html" (postCtx (Just (return i18nItems)))
             >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
             >>= relativizeUrls
 
@@ -48,6 +48,39 @@ main = hakyll $ do
     indexRules "de" paginateDe
     paginateKo <- buildPaginateWith postsGrouper (postsPattern "ko") (postsPageId "ko")
     indexRules "ko" paginateKo
+
+    create ["rss_en.xml"] $ do
+        route idRoute
+        compile $ do
+            posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/en.md" "content"
+            let feedCtx =
+                  postCtx Nothing `mappend`
+                  bodyField "description"
+            renderRss feedConfiguration feedCtx posts
+    create ["rss_ko.xml"] $ do
+        route idRoute
+        compile $ do
+            posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/ko.md" "content"
+            let feedCtx =
+                  postCtx Nothing `mappend`
+                  bodyField "description"
+            renderRss feedConfiguration feedCtx posts
+    create ["atom_en.xml"] $ do
+        route idRoute
+        compile $ do
+            posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/en.md" "content"
+            let feedCtx =
+                  postCtx Nothing `mappend`
+                  bodyField "description"
+            renderAtom feedConfiguration feedCtx posts
+    create ["atom_ko.xml"] $ do
+        route idRoute
+        compile $ do
+            posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/ko.md" "content"
+            let feedCtx =
+                  postCtx Nothing `mappend`
+                  bodyField "description"
+            renderAtom feedConfiguration feedCtx posts
 --------------------------------------------------------------------------------
 
 indexRules :: String -> Paginate -> Rules ()
@@ -81,11 +114,16 @@ indexCtx paginate pageNumber lang posts =
     paginateContext paginate pageNumber `mappend`
     defaultContext
 
-postCtx :: Compiler [ Item String ] -> Context String
-postCtx i18nUrls =
-    listField "i18nUrls" (i18nCtx postLinkUrl languageName) i18nUrls `mappend`
-    dateField "date" "%F" `mappend`
-    defaultContext
+postCtx :: Maybe (Compiler [ Item String ] ) -> Context String
+postCtx mbI18nUrls =
+  case mbI18nUrls of
+    Just i18nUrls ->
+      listField "i18nUrls" (i18nCtx postLinkUrl languageName) i18nUrls `mappend`
+      dateField "date" "%F" `mappend`
+      defaultContext
+    Nothing ->
+      dateField "date" "%F" `mappend`
+      defaultContext
 
 postsCtx :: String -> Context String
 postsCtx lang =
@@ -138,3 +176,13 @@ postsGrouper = liftM (paginateEvery 10) . sortRecentFirst
 postsPattern :: String -> Pattern
 postsPattern lang =
   (fromGlob ("posts/*/" ++ lang ++ ".md"))
+
+-- RSS/Atom Feed
+feedConfiguration :: FeedConfiguration
+feedConfiguration = FeedConfiguration
+    { feedTitle       = "Harfang's Perch"
+    , feedDescription = "On software in general, mostly functional"
+    , feedAuthorName  = "harfangk"
+    , feedAuthorEmail = ""
+    , feedRoot        = "https://harfangk.page"
+    }

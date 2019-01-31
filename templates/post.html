@@ -2,6 +2,7 @@
   <header>
     <h1>$title$</h1>
     <time datetime="$date$" itemprop="datePublished">$date$</time>
+    $if(i18nUrls)$
     <ul>
       $for(i18nUrls)$
         <li>
@@ -9,6 +10,7 @@
         </li>
       $endfor$
     </ul>
+    $endif$
   </header>
   <section itemprop="articleBody">
     $body$
