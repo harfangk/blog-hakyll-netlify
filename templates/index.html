@@ -1,4 +1,4 @@
-<section class="page-content">
+<section class="posts page-content">
   <ul class="post-teasers">
     $for(posts)$
     <li>
@@ -15,4 +15,13 @@
     </li>
     $endfor$
   </ul>
+  <footer>
+    $for(allPages)$
+      $if(isCurrent)$
+        <a href="$url$" class="active">$num$</a>
+      $else$
+        <a href="$url$">$num$</a>
+      $endif$
+    $endfor$
+  </footer>
 </section>

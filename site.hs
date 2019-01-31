@@ -1,13 +1,12 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import           Data.Monoid (mappend)
-import           Hakyll
-import I18n
-
+import Data.Monoid (mappend)
+import Control.Monad (liftM)
 import System.FilePath (takeBaseName, takeDirectory, (</>), takeFileName)
 import System.Directory (listDirectory)
 
-
+import Hakyll
+import I18n
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
@@ -43,21 +42,24 @@ main = hakyll $ do
             >>= loadAndApplyTemplate "templates/default.html" (headerCtx lang)
             >>= relativizeUrls
 
-    indexRules "de"
-    indexRules "en"
-    indexRules "ko"
+    paginateEn <- buildPaginateWith postsGrouper (postsPattern "en") (postsPageId "en")
+    indexRules "en" paginateEn
+    paginateDe <- buildPaginateWith postsGrouper (postsPattern "de") (postsPageId "de")
+    indexRules "de" paginateDe
+    paginateKo <- buildPaginateWith postsGrouper (postsPattern "ko") (postsPageId "ko")
+    indexRules "ko" paginateKo
 --------------------------------------------------------------------------------
 
-indexRules :: String -> Rules ()
-indexRules lang =
-    match "templates/index.html" $ version lang $ do
-      route . templateRoute $ lang
-      compile $ do
-        posts <- recentFirst =<< loadAll (fromGlob ("posts/*/" ++ lang ++ ".md"))
-        getResourceBody
-            >>= applyAsTemplate (indexCtx lang posts)
-            >>= loadAndApplyTemplate "templates/default.html" (headerCtx lang)
-            >>= relativizeUrls
+indexRules :: String -> Paginate -> Rules ()
+indexRules lang paginate =
+    paginateRules paginate $ \pageNumber pattern -> do
+        route idRoute
+        compile $ do
+          posts <- recentFirst =<< loadAll pattern
+          makeItem ""
+              >>= loadAndApplyTemplate "templates/index.html" (indexCtx paginate pageNumber lang posts)
+              >>= loadAndApplyTemplate "templates/default.html" (headerCtx lang)
+              >>= relativizeUrls
 
 compressScssCompiler :: Compiler (Item String)
 compressScssCompiler = do
@@ -71,11 +73,12 @@ compressScssCompiler = do
 
 -- Contexts
 
-indexCtx :: String -> [ Item String ] -> Context String
-indexCtx lang posts =
+indexCtx :: Paginate -> PageNumber -> String -> [ Item String ] -> Context String
+indexCtx paginate pageNumber lang posts =
     listField "posts" (postsCtx lang) (return posts) `mappend`
     constField "postsHeader" (languageName lang) `mappend`
     constField "title" "Harfang's Perch" `mappend`
+    paginateContext paginate pageNumber `mappend`
     defaultContext
 
 headerCtx :: String -> Context String
@@ -107,11 +110,6 @@ i18nCtx urlTransformer textTransformer =
     (field "langName" $ \item -> return . textTransformer . takeBaseName . toFilePath . itemIdentifier $ item)
 
 -- Routes
-
-templateRoute :: String -> Routes
-templateRoute lang =
-  customRoute (\identifier -> lang </> (takeFileName . toFilePath $ identifier))
-
 postRoute :: Routes
 postRoute =
   customRoute (\identifier -> postLinkUrl . toFilePath $ identifier)
@@ -128,3 +126,14 @@ getAbsoluteFilepaths :: FilePath -> IO [ FilePath ]
 getAbsoluteFilepaths path = do
   contents <- listDirectory path
   return $ map (path </>) contents
+
+-- Paginate
+postsPageId :: String -> PageNumber -> Identifier
+postsPageId lang n = fromFilePath $ if (n == 1) then lang </> "index.html" else lang </> show n </> "index.html"
+
+postsGrouper :: MonadMetadata m => [Identifier] -> m [[Identifier]]
+postsGrouper = liftM (paginateEvery 10) . sortRecentFirst
+
+postsPattern :: String -> Pattern
+postsPattern lang =
+  (fromGlob ("posts/*/" ++ lang ++ ".md"))
