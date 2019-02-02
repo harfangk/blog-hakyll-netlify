@@ -2,14 +2,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 import Data.Monoid (mappend)
 import Control.Monad (liftM)
-import System.FilePath (takeBaseName, takeDirectory, (</>), takeFileName)
-import System.Directory (listDirectory)
+import System.FilePath (takeBaseName, takeDirectory, (</>))
+import System.Directory (listDirectory, copyFile)
 
 import Hakyll
 import I18n
 --------------------------------------------------------------------------------
 main :: IO ()
-main = hakyll $ do
+main = do
+  copyFile "./_redirects" "./_site/_redirects"
+  hakyll $ do
     match "images/*" $ do
         route   idRoute
         compile copyFileCompiler
