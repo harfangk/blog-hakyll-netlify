@@ -1,10 +1,27 @@
 module I18n where
 
 import System.FilePath (takeBaseName, takeDirectory, (</>), (<.>))
+import Hakyll
 
-supportedLangs :: [ FilePath ]
-supportedLangs =
+-- Language Configurations
+
+mainLangs :: [ FilePath ]
+mainLangs =
     [ "en", "ko" ]
+
+allLangs :: [ FilePath ]
+allLangs =
+    [ "en", "ko", "de" ]
+
+languageName :: String -> String
+languageName lang =
+  case lang of
+    "en" -> "English"
+    "ko" -> "한국어"
+    "de" -> "Deutsch"
+    _ -> "Unknown Language"
+
+-- Link Texts and Link Urls
 
 indexLinkUrl :: String -> FilePath
 indexLinkUrl lang =
@@ -21,14 +38,6 @@ indexLinkText lang =
 postLinkUrl :: FilePath -> FilePath
 postLinkUrl path =
   takeBaseName path </> takeDirectory path <.> "html"
-
-languageName :: String -> String
-languageName lang =
-  case lang of
-    "en" -> "English"
-    "ko" -> "한국어"
-    "de" -> "Deutsch"
-    _ -> "Unknown Language"
 
 aboutLinkUrl :: String -> String
 aboutLinkUrl lang =
@@ -62,6 +71,8 @@ readMoreLinkText lang =
     "de" -> "Weiter lesen"
     _ -> "Home"
 
+-- Feed Urls
+
 rssFeedUrl :: String -> String
 rssFeedUrl lang =
   "/" ++ lang ++ "/rss.xml"
@@ -69,3 +80,12 @@ rssFeedUrl lang =
 atomFeedUrl :: String -> String
 atomFeedUrl lang =
   "/" ++ lang ++ "/atom.xml"
+
+-- Helper
+
+emptyLanguageItems :: [ FilePath ] -> [ Item String ]
+emptyLanguageItems =
+  map (\path ->
+         Item { itemIdentifier = fromFilePath path
+              , itemBody = ""}
+         )

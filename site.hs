@@ -6,11 +6,12 @@ import System.FilePath (takeBaseName, (</>), (<.>))
 import System.Directory (listDirectory, copyFile)
 
 import Hakyll
-import I18n
+import qualified I18n
 --------------------------------------------------------------------------------
 main :: IO ()
 main = do
   copyFile "./_redirects" "./_site/_redirects"
+
   filesPerPostList <- listFilesPerPost
 
   hakyll $ do
@@ -35,51 +36,18 @@ main = do
 
     foldl1 (>>) (map postRules filesPerPostList)
 
-    paginateEn <- buildPaginateWith postsGrouper (postsPattern "en") (postsPageId "en")
-    indexRules "en" paginateEn
-    paginateDe <- buildPaginateWith postsGrouper (postsPattern "de") (postsPageId "de")
-    indexRules "de" paginateDe
-    paginateKo <- buildPaginateWith postsGrouper (postsPattern "ko") (postsPageId "ko")
-    indexRules "ko" paginateKo
+    foldl1 (>>) (map indexRules I18n.allLangs)
 
-    create ["en/rss.xml"] $ do
-        route idRoute
-        compile $ do
-            posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/en.md" "content"
-            let feedCtx =
-                  postCtx Nothing `mappend`
-                  bodyField "description"
-            renderRss feedConfiguration feedCtx posts
+    let feedItems = cartProd I18n.mainLangs ["rss", "atom"]
 
-    create ["ko/rss.xml"] $ do
-        route idRoute
-        compile $ do
-            posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/ko.md" "content"
-            let feedCtx =
-                  postCtx Nothing `mappend`
-                  bodyField "description"
-            renderRss feedConfiguration feedCtx posts
+    foldl1 (>>) (map feedRules feedItems)
 
-    create ["en/atom.xml"] $ do
-        route idRoute
-        compile $ do
-            posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/en.md" "content"
-            let feedCtx =
-                  postCtx Nothing `mappend`
-                  bodyField "description"
-            renderAtom feedConfiguration feedCtx posts
-    create ["ko/atom.xml"] $ do
-        route idRoute
-        compile $ do
-            posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*/ko.md" "content"
-            let feedCtx =
-                  postCtx Nothing `mappend`
-                  bodyField "description"
-            renderAtom feedConfiguration feedCtx posts
 --------------------------------------------------------------------------------
+-- Rules
 
-indexRules :: String -> Paginate -> Rules ()
-indexRules lang paginate =
+indexRules :: String -> Rules ()
+indexRules lang = do
+    paginate <- buildPaginateWith postsGrouper (postsPattern lang) (postsPageId lang)
     paginateRules paginate $ \pageNumber pattern -> do
         route idRoute
         compile $ do
@@ -88,6 +56,36 @@ indexRules lang paginate =
               >>= loadAndApplyTemplate "templates/index.html" (indexCtx paginate pageNumber lang posts)
               >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
               >>= relativizeUrls
+
+postRules :: (FilePath, [FilePath]) -> Rules ()
+postRules (dir, langs) =
+  match (fromGlob $ "posts" </> dir </> "*") $ do
+    route postRoute
+    compile $ do
+      currentPath <- getResourceFilePath
+      let lang = takeBaseName currentPath
+      let i18nItems = I18n.emptyLanguageItems langs
+      pandocCompiler
+        >>= saveSnapshot "content"
+        >>= loadAndApplyTemplate "templates/post.html" (postCtx (Just (return i18nItems)))
+        >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
+        >>= relativizeUrls
+
+feedRules :: (String, String) -> Rules ()
+feedRules (lang, feedType) = do
+  let fileName = lang </> feedType <.> "xml"
+  let snapshotPath = fromGlob $ "posts" </> "*" </> lang <.> "md"
+  let feedFunction = if feedType == "rss" then renderRss else renderAtom
+  create [fromFilePath fileName] $ do
+    route idRoute
+    compile $ do
+      posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots snapshotPath "content"
+      let feedCtx =
+            postCtx Nothing `mappend`
+            bodyField "description"
+      feedFunction feedConfiguration feedCtx posts
+
+-- Compilers
 
 compressScssCompiler :: Compiler (Item String)
 compressScssCompiler = do
@@ -104,7 +102,7 @@ compressScssCompiler = do
 indexCtx :: Paginate -> PageNumber -> String -> [ Item String ] -> Context String
 indexCtx paginate pageNumber lang posts =
     listField "posts" (postsCtx lang) (return posts) `mappend`
-    constField "postsHeader" (languageName lang) `mappend`
+    constField "postsHeader" (I18n.languageName lang) `mappend`
     constField "title" "Harfang's Perch" `mappend`
     paginateContext paginate pageNumber `mappend`
     defaultContext
@@ -113,7 +111,7 @@ postCtx :: Maybe (Compiler [ Item String ] ) -> Context String
 postCtx mbI18nUrls =
   case mbI18nUrls of
     Just i18nUrls ->
-      listField "i18nUrls" (i18nCtx postLinkUrl languageName) i18nUrls `mappend`
+      listField "i18nUrls" (i18nCtx I18n.postLinkUrl I18n.languageName) i18nUrls `mappend`
       dateField "date" "%F" `mappend`
       defaultContext
     Nothing ->
@@ -124,18 +122,18 @@ postsCtx :: String -> Context String
 postsCtx lang =
     teaserField "teaser" "content" `mappend`
     dateField "date" "%F" `mappend`
-    constField "readMoreLinkText" (readMoreLinkText lang) `mappend`
+    constField "readMoreLinkText" (I18n.readMoreLinkText lang) `mappend`
     defaultContext
 
 defaultCtx :: String -> Context String
 defaultCtx lang =
-    listField "langs" (i18nCtx indexLinkUrl languageName) (return . emptyLanguageItems $ supportedLangs) `mappend`
-    constField "postsLinkText" (postsLinkText lang) `mappend`
-    constField "postsLinkUrl" (postsLinkUrl lang) `mappend`
-    constField "aboutLinkText" (aboutLinkText lang) `mappend`
-    constField "aboutLinkUrl" (aboutLinkUrl lang) `mappend`
-    constField "atomFeedUrl" (atomFeedUrl lang) `mappend`
-    constField "rssFeedUrl" (rssFeedUrl lang) `mappend`
+    listField "langs" (i18nCtx I18n.indexLinkUrl I18n.languageName) (return . I18n.emptyLanguageItems $ I18n.mainLangs) `mappend`
+    constField "postsLinkText" (I18n.postsLinkText lang) `mappend`
+    constField "postsLinkUrl" (I18n.postsLinkUrl lang) `mappend`
+    constField "aboutLinkText" (I18n.aboutLinkText lang) `mappend`
+    constField "aboutLinkUrl" (I18n.aboutLinkUrl lang) `mappend`
+    constField "atomFeedUrl" (I18n.atomFeedUrl lang) `mappend`
+    constField "rssFeedUrl" (I18n.rssFeedUrl lang) `mappend`
     constField "htmlLang" lang <>
     constField "title" "Harfang's Perch" `mappend`
     defaultContext
@@ -148,15 +146,16 @@ i18nCtx urlTransformer textTransformer =
 -- Routes
 postRoute :: Routes
 postRoute =
-  customRoute (\identifier -> postLinkUrl . toFilePath $ identifier)
+  customRoute (\identifier -> I18n.postLinkUrl . toFilePath $ identifier)
 
 -- Helpers
-emptyLanguageItems :: [ FilePath ] -> [ Item String ]
-emptyLanguageItems =
-  map (\path ->
-         Item { itemIdentifier = fromFilePath path
-              , itemBody = ""}
-         )
+listFilesPerPost :: IO [(FilePath, [FilePath])]
+listFilesPerPost = do
+  directories <- listDirectory "./posts"
+  mapM (\dir -> (fmap (((,) dir) . (map (\fileName -> "posts" </> dir </> fileName)))) (listDirectory $ "posts" </> dir)) directories
+
+cartProd :: [a] -> [b] -> [(a, b)]
+cartProd xs ys = [(x,y) | x <- xs, y <- ys]
 
 -- Paginate
 postsPageId :: String -> PageNumber -> Identifier
@@ -178,22 +177,3 @@ feedConfiguration = FeedConfiguration
     , feedAuthorEmail = ""
     , feedRoot        = "https://harfangk.page"
     }
-
-postRules :: (FilePath, [FilePath]) -> Rules ()
-postRules (dir, langs) =
-  match (fromGlob $ "posts" </> dir </> "*") $ do
-    route postRoute
-    compile $ do
-      currentPath <- getResourceFilePath
-      let lang = takeBaseName currentPath
-      let i18nItems = emptyLanguageItems langs
-      pandocCompiler
-        >>= saveSnapshot "content"
-        >>= loadAndApplyTemplate "templates/post.html" (postCtx (Just (return i18nItems)))
-        >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
-        >>= relativizeUrls
-
-listFilesPerPost :: IO [(FilePath, [FilePath])]
-listFilesPerPost = do
-  directories <- listDirectory "./posts"
-  mapM (\dir -> (fmap (((,) dir) . (map (\fileName -> "posts" </> dir </> fileName)))) (listDirectory $ "posts" </> dir)) directories
