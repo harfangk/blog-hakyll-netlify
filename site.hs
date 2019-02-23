@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 import Data.Monoid (mappend)
-import Control.Monad (liftM)
-import System.FilePath (takeBaseName, takeDirectory, (</>))
+import Control.Monad (liftM, mapM)
+import System.FilePath (takeBaseName, (</>), (<.>))
 import System.Directory (listDirectory, copyFile)
 
 import Hakyll
@@ -11,6 +11,8 @@ import I18n
 main :: IO ()
 main = do
   copyFile "./_redirects" "./_site/_redirects"
+  filesPerPostList <- listFilesPerPost
+
   hakyll $ do
     match "images/*" $ do
         route   idRoute
@@ -31,18 +33,7 @@ main = do
             >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
             >>= relativizeUrls
 
-    match "posts/**" $ do
-        route postRoute
-        compile $ do
-          currentPath <- getResourceFilePath
-          let lang = takeBaseName currentPath
-          paths <- unsafeCompiler . getAbsoluteFilepaths . takeDirectory . drop 2 $ currentPath
-          let i18nItems = emptyLanguageItems paths
-          pandocCompiler
-            >>= saveSnapshot "content"
-            >>= loadAndApplyTemplate "templates/post.html" (postCtx (Just (return i18nItems)))
-            >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
-            >>= relativizeUrls
+    foldl1 (>>) (map postRules filesPerPostList)
 
     paginateEn <- buildPaginateWith postsGrouper (postsPattern "en") (postsPageId "en")
     indexRules "en" paginateEn
@@ -59,6 +50,7 @@ main = do
                   postCtx Nothing `mappend`
                   bodyField "description"
             renderRss feedConfiguration feedCtx posts
+
     create ["ko/rss.xml"] $ do
         route idRoute
         compile $ do
@@ -67,6 +59,7 @@ main = do
                   postCtx Nothing `mappend`
                   bodyField "description"
             renderRss feedConfiguration feedCtx posts
+
     create ["en/atom.xml"] $ do
         route idRoute
         compile $ do
@@ -165,11 +158,6 @@ emptyLanguageItems =
               , itemBody = ""}
          )
 
-getAbsoluteFilepaths :: FilePath -> IO [ FilePath ]
-getAbsoluteFilepaths path = do
-  contents <- listDirectory path
-  return $ map (path </>) contents
-
 -- Paginate
 postsPageId :: String -> PageNumber -> Identifier
 postsPageId lang n = fromFilePath $ if (n == 1) then lang </> "index.html" else lang </> show n </> "index.html"
@@ -179,7 +167,7 @@ postsGrouper = liftM (paginateEvery 10) . sortRecentFirst
 
 postsPattern :: String -> Pattern
 postsPattern lang =
-  (fromGlob ("posts/*/" ++ lang ++ ".md"))
+  (fromGlob ("posts" </> "*" </> lang <.> "md"))
 
 -- RSS/Atom Feed
 feedConfiguration :: FeedConfiguration
@@ -190,3 +178,22 @@ feedConfiguration = FeedConfiguration
     , feedAuthorEmail = ""
     , feedRoot        = "https://harfangk.page"
     }
+
+postRules :: (FilePath, [FilePath]) -> Rules ()
+postRules (dir, langs) =
+  match (fromGlob $ "posts" </> dir </> "*") $ do
+    route postRoute
+    compile $ do
+      currentPath <- getResourceFilePath
+      let lang = takeBaseName currentPath
+      let i18nItems = emptyLanguageItems langs
+      pandocCompiler
+        >>= saveSnapshot "content"
+        >>= loadAndApplyTemplate "templates/post.html" (postCtx (Just (return i18nItems)))
+        >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
+        >>= relativizeUrls
+
+listFilesPerPost :: IO [(FilePath, [FilePath])]
+listFilesPerPost = do
+  directories <- listDirectory "./posts"
+  mapM (\dir -> (fmap (((,) dir) . (map (\fileName -> "posts" </> dir </> fileName)))) (listDirectory $ "posts" </> dir)) directories
