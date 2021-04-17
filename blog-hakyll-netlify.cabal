@@ -1,19 +1,82 @@
-name               :    blog-hakyll-netlify
-version            :    0.1.0.0
-homepage           :    harfangk.page
-license            :    OtherLicense
-author             :    Bonghyun Kim
-copyright          :    2018 Bonghyun Kim
-category           :    Web
-build-type         :    Simple
-cabal-version      :    >=1.10
+cabal-version: 1.12
 
-executable site
-    main-is          :  site.hs
-    other-modules    :  I18n
-    default-language :  Haskell2010
-    build-depends    :  base,
-                        hakyll,
-                        filepath,
-                        containers,
-                        directory
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 4e80b4c85f5deeaca54c49f7599a2dcc19030a911cf27461bf850a06124303c6
+
+name:           blog-hakyll-netlify
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/harfangk/blog-hakyll-netlify#readme>
+homepage:       https://github.com/harfangk/blog-hakyll-netlify#readme
+bug-reports:    https://github.com/harfangk/blog-hakyll-netlify/issues
+author:         Bonghyun Kim
+maintainer:     bonghyun.d.kim@gmail.com
+copyright:      MIT License
+license:        BSD3
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/harfangk/blog-hakyll-netlify
+
+library
+  other-modules:
+      Paths_blog_hakyll_netlify
+  build-depends:
+      apply-refact
+    , base >=4.7 && <5
+    , directory
+    , filepath
+    , hakyll
+    , hasktags
+    , hlint
+    , hoogle
+    , stylish-haskell
+  default-language: Haskell2010
+
+executable blog-hakyll-netlify-exe
+  main-is: site.hs
+  other-modules:
+      I18n
+      Paths_blog_hakyll_netlify
+  hs-source-dirs:
+      ./.
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      apply-refact
+    , base >=4.7 && <5
+    , blog-hakyll-netlify
+    , directory
+    , filepath
+    , hakyll
+    , hasktags
+    , hlint
+    , hoogle
+    , stylish-haskell
+  default-language: Haskell2010
+
+test-suite blog-hakyll-netlify-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_blog_hakyll_netlify
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      apply-refact
+    , base >=4.7 && <5
+    , blog-hakyll-netlify
+    , directory
+    , filepath
+    , hakyll
+    , hasktags
+    , hlint
+    , hoogle
+    , stylish-haskell
+  default-language: Haskell2010

@@ -161,7 +161,7 @@ cartProd xs ys = [(x,y) | x <- xs, y <- ys]
 postsPageId :: String -> PageNumber -> Identifier
 postsPageId lang n = fromFilePath $ if (n == 1) then lang </> "index.html" else lang </> show n </> "index.html"
 
-postsGrouper :: MonadMetadata m => [Identifier] -> m [[Identifier]]
+postsGrouper :: (MonadMetadata m, MonadFail m) => [Identifier] -> m [[Identifier]]
 postsGrouper = liftM (paginateEvery 10) . sortRecentFirst
 
 postsPattern :: String -> Pattern

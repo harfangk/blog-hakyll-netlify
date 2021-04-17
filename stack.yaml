@@ -17,7 +17,8 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-12.26
+resolver:
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/31.yaml
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -25,23 +26,29 @@ resolver: lts-12.26
 # packages:
 # - some-directory
 # - https://example.com/foo/bar/baz-0.0.2.tar.gz
-# - location:
-#    git: https://github.com/commercialhaskell/stack.git
-#    commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
-# - location: https://github.com/commercialhaskell/stack/commit/e7b331f14bcffb8367cd58fbfc8b40ec7642100a
-#  subdirs:
-#  - auto-update
-#  - wai
+#   subdirs:
+#   - auto-update
+#   - wai
 packages:
 - .
-# Dependency packages to be pulled from upstream that are not in the resolver
-# using the same syntax as the packages field.
-# (e.g., acme-missiles-0.3)
+# Dependency packages to be pulled from upstream that are not in the resolver.
+# These entries can reference officially published versions as well as
+# forks / in-progress versions pinned to a git hash. For example:
+#
+# extra-deps:
+# - acme-missiles-0.3
+# - git: https://github.com/commercialhaskell/stack.git
+#   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
+
 extra-deps:
+- apply-refact-0.9.2.0@sha256:622b6b745b10cc2ca9ebae57e8f4baf58e52d0c4eb094627c70579594c1ab2f5,5173
+- hasktags-0.71.2@sha256:4332adbe1f81237605faf10b1854c0d2ebebe5699a5f655657f11259ebda2d4a,2864
+- hoogle-5.0.18.1@sha256:7355e70a4b7df53a1c17508e67b3c52b7a8cd60df1c7e62acf83ff14c643d743,3163
+- ghc-exactprint-0.6.4@sha256:51651c9491eae7a82e7623eb131c2a42a4b4e25d53e6ca4812aadec2cf32c947,9746
+- json-0.10@sha256:d9fc6b07ce92b8894825a17d2cf14799856767eb30c8bf55962baa579207d799,3210
 
 # Override default flag values for local packages and extra-deps
-# flags:   
-
+# flags: {}
 
 # Extra package databases containing global packages
 # extra-package-dbs: []
@@ -51,7 +58,7 @@ extra-deps:
 #
 # Require a specific version of stack, using version ranges
 # require-stack-version: -any # Default
-# require-stack-version: ">=1.9"
+# require-stack-version: ">=2.5"
 #
 # Override the architecture used by stack, especially useful on Windows
 # arch: i386
