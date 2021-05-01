@@ -1,7 +1,5 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import Data.Monoid (mappend)
-import Control.Monad (liftM, mapM)
 import System.FilePath (takeBaseName, (</>), (<.>))
 import System.Directory (listDirectory, copyFile)
 
@@ -48,10 +46,10 @@ main = do
 indexRules :: String -> Rules ()
 indexRules lang = do
     paginate <- buildPaginateWith postsGrouper (postsPattern lang) (postsPageId lang)
-    paginateRules paginate $ \pageNumber pattern -> do
+    paginateRules paginate $ \pageNumber pat -> do
         route idRoute
         compile $ do
-          posts <- recentFirst =<< loadAll pattern
+          posts <- recentFirst =<< loadAll pat
           makeItem ""
               >>= loadAndApplyTemplate "templates/index.html" (indexCtx paginate pageNumber lang posts)
               >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
@@ -81,7 +79,7 @@ feedRules (lang, feedType) = do
     compile $ do
       posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots snapshotPath "content"
       let feedCtx =
-            postCtx Nothing `mappend`
+            postCtx Nothing <>
             bodyField "description"
       feedFunction feedConfiguration feedCtx posts
 
@@ -101,72 +99,71 @@ compressScssCompiler = do
 
 indexCtx :: Paginate -> PageNumber -> String -> [ Item String ] -> Context String
 indexCtx paginate pageNumber lang posts =
-    listField "posts" (postsCtx lang) (return posts) `mappend`
-    constField "postsHeader" (I18n.languageName lang) `mappend`
-    constField "title" "Harfang's Perch" `mappend`
-    paginateContext paginate pageNumber `mappend`
+    listField "posts" (postsCtx lang) (return posts) <>
+    constField "postsHeader" (I18n.languageName lang) <>
+    constField "title" "Harfang's Perch" <>
+    paginateContext paginate pageNumber <>
     defaultContext
 
 postCtx :: Maybe (Compiler [ Item String ] ) -> Context String
 postCtx mbI18nUrls =
   case mbI18nUrls of
     Just i18nUrls ->
-      listField "i18nUrls" (i18nCtx I18n.postLinkUrl I18n.languageName) i18nUrls `mappend`
-      dateField "date" "%F" `mappend`
+      listField "i18nUrls" (i18nCtx I18n.postLinkUrl I18n.languageName) i18nUrls <>
+      dateField "date" "%F" <>
       defaultContext
     Nothing ->
-      dateField "date" "%F" `mappend`
+      dateField "date" "%F" <>
       defaultContext
 
 postsCtx :: String -> Context String
 postsCtx lang =
-    teaserField "teaser" "content" `mappend`
-    dateField "date" "%F" `mappend`
-    constField "readMoreLinkText" (I18n.readMoreLinkText lang) `mappend`
+    teaserField "teaser" "content" <>
+    dateField "date" "%F" <>
+    constField "readMoreLinkText" (I18n.readMoreLinkText lang) <>
     defaultContext
 
 defaultCtx :: String -> Context String
 defaultCtx lang =
-    listField "langs" (i18nCtx I18n.indexLinkUrl I18n.languageName) (return . I18n.emptyLanguageItems $ I18n.mainLangs) `mappend`
-    constField "postsLinkText" (I18n.postsLinkText lang) `mappend`
-    constField "postsLinkUrl" (I18n.postsLinkUrl lang) `mappend`
-    constField "aboutLinkText" (I18n.aboutLinkText lang) `mappend`
-    constField "aboutLinkUrl" (I18n.aboutLinkUrl lang) `mappend`
-    constField "atomFeedUrl" (I18n.atomFeedUrl lang) `mappend`
-    constField "rssFeedUrl" (I18n.rssFeedUrl lang) `mappend`
+    listField "langs" (i18nCtx I18n.indexLinkUrl I18n.languageName) (return . I18n.emptyLanguageItems $ I18n.mainLangs) <>
+    constField "postsLinkText" (I18n.postsLinkText lang) <>
+    constField "postsLinkUrl" (I18n.postsLinkUrl lang) <>
+    constField "aboutLinkText" (I18n.aboutLinkText lang) <>
+    constField "aboutLinkUrl" (I18n.aboutLinkUrl lang) <>
+    constField "atomFeedUrl" (I18n.atomFeedUrl lang) <>
+    constField "rssFeedUrl" (I18n.rssFeedUrl lang) <>
     constField "htmlLang" lang <>
-    constField "title" "Harfang's Perch" `mappend`
+    constField "title" "Harfang's Perch" <>
     defaultContext
 
 i18nCtx :: (FilePath -> FilePath) -> (String -> String) -> Context String
 i18nCtx urlTransformer textTransformer =
-    (field "langUrl" $ \item -> return $ "/" ++ (urlTransformer . toFilePath . itemIdentifier $ item )) `mappend`
-    (field "langName" $ \item -> return . textTransformer . takeBaseName . toFilePath . itemIdentifier $ item)
+    field "langUrl" (return . ("/" ++) . urlTransformer . toFilePath . itemIdentifier) <> field "langName" (return . textTransformer . takeBaseName . toFilePath . itemIdentifier)
 
 -- Routes
 postRoute :: Routes
 postRoute =
-  customRoute (\identifier -> I18n.postLinkUrl . toFilePath $ identifier)
+  customRoute $ I18n.postLinkUrl . toFilePath
 
 -- Helpers
 listFilesPerPost :: IO [(FilePath, [FilePath])]
 listFilesPerPost = do
   directories <- listDirectory "./posts"
-  mapM (\dir -> (fmap (((,) dir) . (map (\fileName -> "posts" </> dir </> fileName)))) (listDirectory $ "posts" </> dir)) directories
+  mapM (\dir -> fmap ((,) dir . map (\fileName -> "posts" </> dir </> fileName)) (listDirectory $ "posts" </> dir)) directories
 
 cartProd :: [a] -> [b] -> [(a, b)]
 cartProd xs ys = [(x,y) | x <- xs, y <- ys]
 
 -- Paginate
 postsPageId :: String -> PageNumber -> Identifier
-postsPageId lang n = fromFilePath $ if (n == 1) then lang </> "index.html" else lang </> show n </> "index.html"
+postsPageId lang n = fromFilePath $ if n == 1 then lang </> "index.html" else lang </> show n </> "index.html"
 
 postsGrouper :: (MonadMetadata m, MonadFail m) => [Identifier] -> m [[Identifier]]
-postsGrouper = liftM (paginateEvery 10) . sortRecentFirst
+postsGrouper = fmap (paginateEvery 10) . sortRecentFirst
 
 postsPattern :: String -> Pattern
 postsPattern lang =
-  (fromGlob ("posts" </> "*" </> lang <.> "md"))
+  fromGlob ("posts" </> "*" </> lang <.> "md")
 
 -- RSS/Atom Feed
 feedConfiguration :: FeedConfiguration
@@ -175,5 +172,5 @@ feedConfiguration = FeedConfiguration
     , feedDescription = "On software in general, mostly functional"
     , feedAuthorName  = "harfangk"
     , feedAuthorEmail = ""
-    , feedRoot        = "https://harfangk.page"
+    , feedRoot        = "https://harfangk.dev"
     }
