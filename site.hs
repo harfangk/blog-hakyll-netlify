@@ -1,15 +1,13 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 import System.FilePath (takeBaseName, (</>), (<.>))
-import System.Directory (listDirectory, copyFile)
+import System.Directory (listDirectory)
 
 import Hakyll
 import qualified I18n
 --------------------------------------------------------------------------------
 main :: IO ()
 main = do
-  copyFile "./_redirects" "./_site/_redirects"
-
   filesPerPostList <- listFilesPerPost
 
   hakyll $ do
@@ -40,6 +38,10 @@ main = do
 
     foldl1 (>>) (map feedRules feedItems)
 
+    -- Copy redirection rules for Netlify
+    match "_redirects" $ do
+      route idRoute
+      compile copyFileCompiler
 --------------------------------------------------------------------------------
 -- Rules
 
