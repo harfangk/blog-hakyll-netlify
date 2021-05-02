@@ -6,7 +6,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: haskell:8.8.4
+      - image: fpco/stack-build:lts-16.31
     steps:
       - checkout
       - node/install:
