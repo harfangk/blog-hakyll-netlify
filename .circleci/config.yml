@@ -18,8 +18,8 @@ jobs:
           name: Restore Cached Dependencies
           keys:
             - dependencies-{{ checksum "stack.yaml" }}
-      - run: stack setup
-      - run: stack build --dependencies-only -j1 --fast
+      - run: stack --no-terminal setup
+      - run: stack --no-terminal build --dependencies-only -j1 --fast
       - save_cache:
           name: Cache Dependencies
           key: dependencies-{{ checksum "stack.yaml" }}
