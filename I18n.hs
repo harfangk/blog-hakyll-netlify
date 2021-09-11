@@ -61,15 +61,15 @@ postsLinkText lang =
     "en" -> "Posts"
     "ko" -> "글 목록"
     "de" -> "Posts"
-    _ -> "Home"
+    _ -> "Posts"
 
 readMoreLinkText :: String -> String
 readMoreLinkText lang =
   case lang of
-    "en" -> "Continue reading"
+    "en" -> "Read more"
     "ko" -> "전체 보기"
     "de" -> "Weiter lesen"
-    _ -> "Home"
+    _ -> "Read more"
 
 -- Feed Urls
 

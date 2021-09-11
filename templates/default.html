@@ -19,14 +19,14 @@
             <a href="$aboutLinkUrl$">$aboutLinkText$</a>
           </li>
           $if(rssFeedUrl)$
-          $if(atomFeedUrl)$
           <li>
             <a href="$rssFeedUrl$">RSS</a>
           </li>
+          $endif$
+          $if(atomFeedUrl)$
           <li>
             <a href="$atomFeedUrl$">Atom</a>
           </li>
-          $endif$
           $endif$
         </ul>
         <ul class="language-menu">
