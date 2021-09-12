@@ -6,7 +6,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: fpco/stack-build:lts-16.31
+      - image: harfangk/hakyll:4.13.4.0
     steps:
       - checkout
       - node/install:
