@@ -2,8 +2,6 @@
 title: From Jekyll to Hakyll":" An Epic Tale of Yak Shaving
 ---
 
-## All Yak Shavings Start With A Missing Syntax Highlighting
-
 It all began when I noticed that the Elm code snippets in my posts did not have syntax highlighting. It was easy to figure out what was going on. I had set up my blog using `GitHub Pages` gem, which included Jekyll and other supporting libraries. The syntax highlighting library `rouge`, however, was locked to version 2.2.1 that did not support Elm. Forcefully upgrading `rouge` might have resolved the issue, but then I thought, why not get rid of the `GitHub Pages` gem and upgrade all the dependencies? So began the yak shaving. 
 
 <!--more-->
