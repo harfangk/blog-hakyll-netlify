@@ -91,10 +91,10 @@ compressScssCompiler :: Compiler (Item String)
 compressScssCompiler = do
   fmap (fmap compressCss) $
     getResourceString
-    >>= withItemBody (unixFilter "sass" [ "-s"
-                                        , "--scss"
-                                        , "--style", "compressed"
-                                        , "--load-path", "css"
+    >>= withItemBody (unixFilter "sass" [ "--stdin"
+                                        , "--no-indented"
+                                        , "--style=compressed"
+                                        , "--load-path=css"
                                         ])
 
 -- Contexts
