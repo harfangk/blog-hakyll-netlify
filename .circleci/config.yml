@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: 14.16.0
+          node-version: 14.17.6
       - run:
           name: Install netlify-cli
           command: npm install --prefix=$HOME/.local --global netlify-cli
