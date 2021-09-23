@@ -28,15 +28,10 @@ library
   other-modules:
       Paths_blog_hakyll_netlify
   build-depends:
-      apply-refact
-    , base >=4.7 && <5
+    base >=4.7 && <5
     , directory
     , filepath
     , hakyll
-    , hasktags
-    , hlint
-    , hoogle
-    , stylish-haskell
   default-language: Haskell2010
 
 executable blog-hakyll-netlify-exe
@@ -48,14 +43,9 @@ executable blog-hakyll-netlify-exe
       ./.
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      apply-refact
-    , base >=4.7 && <5
+    base >=4.7 && <5
     , blog-hakyll-netlify
     , directory
     , filepath
     , hakyll
-    , hasktags
-    , hlint
-    , hoogle
-    , stylish-haskell
   default-language: Haskell2010
