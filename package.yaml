@@ -21,12 +21,7 @@ description:         Please see the README on GitHub at <https://github.com/harf
 
 dependencies:
 - base >= 4.7 && < 5
-- apply-refact
-- hlint
-- stylish-haskell
-- hasktags
 - hakyll
-- hoogle
 - filepath
 - directory
 
