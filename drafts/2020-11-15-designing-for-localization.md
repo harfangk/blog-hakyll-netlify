@@ -1,9 +1,5 @@
 ---
-layout: post
-ref: designing-for-localization
-date: 2020-11-15 00:00:00 +0900
 title: Designing for Localization
-lang: en
 ---
 
 Are you working on a product that will be localized one day? Then I have some recommendations for you. I've localized two small products as a frontend developer and translator, neither of which was designed with localization in mind. They were not easy to work with. While I'm writing this post to save the translators from facing the same problem, this also matters to other professions. If your design does not have a room for localization, the localization process will tear apart the user experience that you've carefully laid out. It's a lose-lose situation and no one wants that. So here are my recommendations.

@@ -1,9 +1,5 @@
 ---
-layout: post
-ref: elm-fast-and-steady
-date: 2018-11-17 00:00:00 +0900
 title: How to Make Elm Move Fast Yet Steady
-lang: en
 ---
 
 I've been using Elm in production for a year, and I really like the reliability it gives - I'll always choose it over vanilla JavaScript for writing web applications. But Elm is still a small language that lacks a lot of features that are available in JavaScript, which is only natural. JavaScript has much larger community and more financial support. So Elm can't provide all the features that JavaScript ecosystem provides.

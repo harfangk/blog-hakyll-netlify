@@ -1,9 +1,5 @@
 ---
-layout: post
-ref: leaving-no-program-branch-unturned
-date: 2020-01-04 00:00:00 +0900
 title: Leaving No Program Branch Unturned With Elm
-lang: en
 ---
 
 One of the best characteristics of Elm is how it nudges you to exhaustively think through all program branches, resulting in significantly fewer bugs and undefined behaviors in the programs. Let's compare the process of writing a trivial program in both Javascript and Elm. We'll be parsing a JSON response that contains one of the four directions and return the corresponding arrow symbol. For example, given the input `{"dir": "up"}`, the return value should be `↑`.

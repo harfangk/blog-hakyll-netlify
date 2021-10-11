@@ -1,9 +1,5 @@
 ---
-layout: post
-ref: 
-date: 2019-01-04 00:00:00 +0900
 title: 
-lang: en
 ---
 
 Complexity mismatch between actual project and language/framework
