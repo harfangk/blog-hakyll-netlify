@@ -1,5 +1,5 @@
---- 
-title: Back to Software Engineer from Product Manager 
+---
+title: Back to Software Engineer from Product Manager
 ---
 
 After working as a product manager for two years and launching two products, 
