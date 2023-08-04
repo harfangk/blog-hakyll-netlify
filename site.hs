@@ -1,10 +1,11 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import System.FilePath (takeBaseName, (</>), (<.>))
-import System.Directory (listDirectory)
 
 import Hakyll
 import qualified I18n
+import System.Directory (listDirectory)
+import System.FilePath (takeBaseName, (<.>), (</>))
+
 --------------------------------------------------------------------------------
 main :: IO ()
 main = do
@@ -12,23 +13,23 @@ main = do
 
   hakyll $ do
     match "images/*" $ do
-        route   idRoute
-        compile copyFileCompiler
+      route idRoute
+      compile copyFileCompiler
 
     match "css/main.scss" $ do
-        route   $ constRoute "main.css"
-        compile compressScssCompiler
+      route $ constRoute "main.css"
+      compile compressScssCompiler
 
     match "templates/*" $ compile templateBodyCompiler
 
     match "about/*.md" $ do
-        route postRoute
-        compile $ do
-          currentPath <- getResourceFilePath
-          let lang = takeBaseName currentPath
-          pandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
-            >>= relativizeUrls
+      route postRoute
+      compile $ do
+        currentPath <- getResourceFilePath
+        let lang = takeBaseName currentPath
+        pandocCompiler
+          >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
+          >>= relativizeUrls
 
     foldl1 (>>) (map postRules filesPerPostList)
 
@@ -42,20 +43,21 @@ main = do
     match "_redirects" $ do
       route idRoute
       compile copyFileCompiler
+
 --------------------------------------------------------------------------------
 -- Rules
 
 indexRules :: String -> Rules ()
 indexRules lang = do
-    paginate <- buildPaginateWith postsGrouper (postsPattern lang) (postsPageId lang)
-    paginateRules paginate $ \pageNumber pat -> do
-        route idRoute
-        compile $ do
-          posts <- recentFirst =<< loadAll pat
-          makeItem ""
-              >>= loadAndApplyTemplate "templates/index.html" (indexCtx paginate pageNumber lang posts)
-              >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
-              >>= relativizeUrls
+  paginate <- buildPaginateWith postsGrouper (postsPattern lang) (postsPageId lang)
+  paginateRules paginate $ \pageNumber pat -> do
+    route idRoute
+    compile $ do
+      posts <- recentFirst =<< loadAll pat
+      makeItem ""
+        >>= loadAndApplyTemplate "templates/index.html" (indexCtx paginate pageNumber lang posts)
+        >>= loadAndApplyTemplate "templates/default.html" (defaultCtx lang)
+        >>= relativizeUrls
 
 postRules :: (FilePath, [FilePath]) -> Rules ()
 postRules (dir, langs) =
@@ -81,8 +83,8 @@ feedRules (lang, feedType) = do
     compile $ do
       posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots snapshotPath "content"
       let feedCtx =
-            postCtx Nothing <>
-            bodyField "description"
+            postCtx Nothing
+              <> bodyField "description"
       feedFunction feedConfiguration feedCtx posts
 
 -- Compilers
@@ -91,56 +93,60 @@ compressScssCompiler :: Compiler (Item String)
 compressScssCompiler = do
   fmap (fmap compressCss) $
     getResourceString
-    >>= withItemBody (unixFilter "sass" [ "--stdin"
-                                        , "--no-indented"
-                                        , "--style=compressed"
-                                        , "--load-path=css"
-                                        ])
+      >>= withItemBody
+        ( unixFilter
+            "sass"
+            [ "--stdin",
+              "--no-indented",
+              "--style=compressed",
+              "--load-path=css"
+            ]
+        )
 
 -- Contexts
 
-indexCtx :: Paginate -> PageNumber -> String -> [ Item String ] -> Context String
+indexCtx :: Paginate -> PageNumber -> String -> [Item String] -> Context String
 indexCtx paginate pageNumber lang posts =
-    listField "posts" (postsCtx lang) (return posts) <>
-    constField "postsHeader" (I18n.languageName lang) <>
-    constField "title" "Harfang's Perch" <>
-    paginateContext paginate pageNumber <>
-    defaultContext
+  listField "posts" (postsCtx lang) (return posts)
+    <> constField "postsHeader" (I18n.languageName lang)
+    <> constField "title" "Harfang's Perch"
+    <> paginateContext paginate pageNumber
+    <> defaultContext
 
-postCtx :: Maybe (Compiler [ Item String ] ) -> Context String
+postCtx :: Maybe (Compiler [Item String]) -> Context String
 postCtx mbI18nUrls =
   case mbI18nUrls of
     Just i18nUrls ->
-      listField "i18nUrls" (i18nCtx I18n.postLinkUrl I18n.languageName) i18nUrls <>
-      dateField "date" "%F" <>
-      defaultContext
+      listField "i18nUrls" (i18nCtx I18n.postLinkUrl I18n.languageName) i18nUrls
+        <> dateField "date" "%F"
+        <> defaultContext
     Nothing ->
-      dateField "date" "%F" <>
-      defaultContext
+      dateField "date" "%F"
+        <> defaultContext
 
 postsCtx :: String -> Context String
 postsCtx lang =
-    teaserField "teaser" "content" <>
-    dateField "date" "%F" <>
-    constField "readMoreLinkText" (I18n.readMoreLinkText lang) <>
-    defaultContext
+  teaserField "teaser" "content"
+    <> dateField "date" "%F"
+    <> constField "readMoreLinkText" (I18n.readMoreLinkText lang)
+    <> defaultContext
 
 defaultCtx :: String -> Context String
 defaultCtx lang =
-    listField "langs" (i18nCtx I18n.indexLinkUrl I18n.languageName) (return . I18n.emptyLanguageItems $ I18n.mainLangs) <>
-    constField "postsLinkText" (I18n.postsLinkText lang) <>
-    constField "postsLinkUrl" (I18n.postsLinkUrl lang) <>
-    constField "aboutLinkText" (I18n.aboutLinkText lang) <>
-    constField "aboutLinkUrl" (I18n.aboutLinkUrl lang) <>
-    constField "atomFeedUrl" (I18n.atomFeedUrl lang) <>
-    constField "rssFeedUrl" (I18n.rssFeedUrl lang) <>
-    constField "htmlLang" lang <>
-    constField "title" "Harfang's Perch" <>
-    defaultContext
+  listField "langs" (i18nCtx I18n.indexLinkUrl I18n.languageName) (return . I18n.emptyLanguageItems $ I18n.mainLangs)
+    <> constField "postsLinkText" (I18n.postsLinkText lang)
+    <> constField "postsLinkUrl" (I18n.postsLinkUrl lang)
+    <> constField "aboutLinkText" (I18n.aboutLinkText lang)
+    <> constField "aboutLinkUrl" (I18n.aboutLinkUrl lang)
+    <> constField "atomFeedUrl" (I18n.atomFeedUrl lang)
+    <> constField "rssFeedUrl" (I18n.rssFeedUrl lang)
+    <> constField "htmlLang" lang
+    <> constField "title" "Harfang's Perch"
+    <> defaultContext
 
 i18nCtx :: (FilePath -> FilePath) -> (String -> String) -> Context String
 i18nCtx urlTransformer textTransformer =
-    field "langUrl" (return . ("/" ++) . urlTransformer . toFilePath . itemIdentifier) <> field "langName" (return . textTransformer . takeBaseName . toFilePath . itemIdentifier)
+  field "langUrl" (return . ("/" ++) . urlTransformer . toFilePath . itemIdentifier) <> field "langName" (return . textTransformer . takeBaseName . toFilePath . itemIdentifier)
 
 -- Routes
 postRoute :: Routes
@@ -154,7 +160,7 @@ listFilesPerPost = do
   mapM (\dir -> fmap ((,) dir . map (\fileName -> "posts" </> dir </> fileName)) (listDirectory $ "posts" </> dir)) directories
 
 cartProd :: [a] -> [b] -> [(a, b)]
-cartProd xs ys = [(x,y) | x <- xs, y <- ys]
+cartProd xs ys = [(x, y) | x <- xs, y <- ys]
 
 -- Paginate
 postsPageId :: String -> PageNumber -> Identifier
@@ -169,10 +175,11 @@ postsPattern lang =
 
 -- RSS/Atom Feed
 feedConfiguration :: FeedConfiguration
-feedConfiguration = FeedConfiguration
-    { feedTitle       = "Harfang's Perch"
-    , feedDescription = "On software in general, mostly functional"
-    , feedAuthorName  = "harfangk"
-    , feedAuthorEmail = ""
-    , feedRoot        = "https://harfangk.dev"
+feedConfiguration =
+  FeedConfiguration
+    { feedTitle = "Harfang's Perch",
+      feedDescription = "On software in general, mostly functional",
+      feedAuthorName = "harfangk",
+      feedAuthorEmail = "",
+      feedRoot = "https://harfangk.dev"
     }

@@ -1,17 +1,17 @@
 module I18n where
 
-import System.FilePath (takeBaseName, takeDirectory, (</>), (<.>))
 import Hakyll
+import System.FilePath (takeBaseName, takeDirectory, (<.>), (</>))
 
 -- Language Configurations
 
-mainLangs :: [ FilePath ]
+mainLangs :: [FilePath]
 mainLangs =
-    [ "en", "ko" ]
+  ["en", "ko"]
 
-allLangs :: [ FilePath ]
+allLangs :: [FilePath]
 allLangs =
-    [ "en", "ko", "de" ]
+  ["en", "ko", "de"]
 
 languageName :: String -> String
 languageName lang =
@@ -83,9 +83,12 @@ atomFeedUrl lang =
 
 -- Helper
 
-emptyLanguageItems :: [ FilePath ] -> [ Item String ]
+emptyLanguageItems :: [FilePath] -> [Item String]
 emptyLanguageItems =
-  map (\path ->
-         Item { itemIdentifier = fromFilePath path
-              , itemBody = ""}
-         )
+  map
+    ( \path ->
+        Item
+          { itemIdentifier = fromFilePath path,
+            itemBody = ""
+          }
+    )
