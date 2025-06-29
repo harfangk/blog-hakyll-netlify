@@ -15,11 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18.x'
+        node-version: 26
     - name: Install sass
       run: npm install -g sass
     - name: Install netlify CLI
@@ -27,7 +27,7 @@ jobs:
     - name: Setup Haskell
       uses: haskell/actions/setup@v2
       with:
-        ghc-version: '9.4.5'
+        ghc-version: '9.8.4'
         stack-version: 'latest'
     - name: Stack build
       uses: freckle/stack-action@v4
