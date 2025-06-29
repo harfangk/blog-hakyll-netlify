@@ -25,12 +25,13 @@ jobs:
     - name: Install netlify CLI
       run: npm install -g netlify-cli
     - name: Setup Haskell
-      uses: haskell/actions/setup@v2
+      uses: haskell-actions/setup@v2
       with:
         ghc-version: '9.8.4'
         stack-version: 'latest'
+        enable-stack: true
     - name: Stack build
-      uses: freckle/stack-action@v4
+      uses: freckle/stack-action@v5
     - name: Build website
       run: stack exec blog-hakyll-netlify-exe build
     - name: Deploy to Netlify
