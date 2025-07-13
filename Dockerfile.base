@@ -4,6 +4,7 @@ FROM haskell:9.8.4
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
+    pkgconf \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js and npm packages
