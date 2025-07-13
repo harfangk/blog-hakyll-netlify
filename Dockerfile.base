@@ -27,5 +27,8 @@ RUN echo 'main = putStrLn "Hello"' > Main.hs \
     && stack build --dependencies-only \
     && rm Main.hs
 
+# Configure Stack to allow different users
+RUN stack config set allow-different-user true --global
+
 # Set the working directory for the actual build
 WORKDIR /app
