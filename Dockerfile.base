@@ -1,0 +1,30 @@
+# Base image with all Haskell dependencies pre-built
+FROM haskell:9.8.4
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js and npm packages
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
+# Install global npm packages
+RUN npm install -g sass netlify-cli
+
+# Set working directory
+WORKDIR /app
+
+# Copy Stack configuration files
+COPY stack.yaml stack.yaml.lock package.yaml ./
+
+# Pre-build dependencies by creating a minimal project
+# This builds all the dependencies without building the actual project
+RUN echo 'main = putStrLn "Hello"' > Main.hs \
+    && stack setup \
+    && stack build --dependencies-only \
+    && rm Main.hs
+
+# Set the working directory for the actual build
+WORKDIR /app

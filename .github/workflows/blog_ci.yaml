@@ -8,32 +8,30 @@ on:
 
 permissions:
   contents: read
+  packages: read
+
+env:
+  REGISTRY: ghcr.io
+  BASE_IMAGE_NAME: ${{ github.repository }}-base
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository }}-base:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 24
-    - name: Install sass
-      run: npm install -g sass
-    - name: Install netlify CLI
-      run: npm install -g netlify-cli
-    - name: Setup Haskell
-      uses: haskell-actions/setup@v2
-      with:
-        ghc-version: '9.8.4'
-        stack-version: 'latest'
-        enable-stack: true
-    - name: Stack build
-      uses: freckle/stack-action@v5
+    
+    - name: Build project
+      run: stack build
+      
     - name: Build website
       run: stack exec blog-hakyll-netlify-exe build
+      
     - name: Deploy to Netlify
       env:
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
