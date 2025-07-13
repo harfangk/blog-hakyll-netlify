@@ -26,11 +26,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Build project
-      run: stack build
+    - name: Fix permissions and build project
+      run: |
+        export STACK_ROOT=/tmp/.stack
+        stack build
       
     - name: Build website
-      run: stack exec blog-hakyll-netlify-exe build
+      run: |
+        export STACK_ROOT=/tmp/.stack
+        stack exec blog-hakyll-netlify-exe build
       
     - name: Deploy to Netlify
       env:
