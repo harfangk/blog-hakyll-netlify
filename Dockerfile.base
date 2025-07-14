@@ -17,6 +17,13 @@ RUN npm install -g sass netlify-cli
 # Set working directory
 WORKDIR /app
 
+# Set STACK_ROOT early so all operations use the same location
+ENV STACK_ROOT=/root/.stack
+
+# Create Stack global config to allow different users
+RUN mkdir -p /root/.stack && \
+    echo "allow-different-user: true" > /root/.stack/config.yaml
+
 # Copy Stack configuration files
 COPY stack.yaml stack.yaml.lock package.yaml ./
 
@@ -26,13 +33,6 @@ RUN echo 'main = putStrLn "Hello"' > Main.hs \
     && stack setup \
     && stack build --dependencies-only \
     && rm Main.hs
-
-# Create Stack global config to allow different users
-RUN mkdir -p /root/.stack && \
-    echo "allow-different-user: true" > /root/.stack/config.yaml
-
-# Set STACK_ROOT to use the location where we built dependencies
-ENV STACK_ROOT=/root/.stack
 
 # Set the working directory for the actual build
 WORKDIR /app
