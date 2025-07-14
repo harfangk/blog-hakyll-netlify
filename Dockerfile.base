@@ -31,5 +31,8 @@ RUN echo 'main = putStrLn "Hello"' > Main.hs \
 RUN mkdir -p /root/.stack && \
     echo "allow-different-user: true" > /root/.stack/config.yaml
 
+# Set STACK_ROOT to use the location where we built dependencies
+ENV STACK_ROOT=/root/.stack
+
 # Set the working directory for the actual build
 WORKDIR /app
